@@ -267,55 +267,73 @@ This diagram shows the control flow for handling a movement of the slider by the
 \subsection{Client-server protocol}
 
 Messages between client and server are exchanged as strings in JSON format.
+Communication is typically initiated by the client. Each request has a message id which is echoed back in the response to help the sender to link the response to the request. The ids can be random, they don't have to be in a specific order.
+\\
+By default, all requests apart from login will be ignored.  A communication session starts with a login request that is responded to with an "OK" session control message. Within a communication session, login is ignored and all other requests can occur in arbitrary order. On receiving a logout request, the server returns into the default state, i.e logged out.
 \\
 In the following list words in angle brackets ("<>") are placeholders.
 \\
 
 \subsubsection{Requests from client to server:}
 \begin{itemize}
+	\item{login}
+	      \\
+	      syntax: \{"cmd": "LOGIN", "user": "<username>", "pwd": "<password>", "id": "<id>"\} \\
+	      expected response: session control
+
+	\item{logout}
+	      \\
+	      syntax: \{"cmd": "LOGOUT", "id": "<id>"\} \\
+	      expected response: session control
+
 	\item{getAvailableCollections}
 	      \\
-	      syntax: \{"cmd": "GET\_AV\_COLL"\} \\
+	      syntax: \{"cmd": "GET\_AV\_COLL", "id": "<id>"\} \\
 	      expected response: list of collections
 
 	\item{getCollectionSize(collection)}
 	      \\
-	      syntax: \{"cmd": "GET\_COLL\_SIZE", "par": "<collection>"\} \\
+	      syntax: \{"cmd": "GET\_COLL\_SIZE", "par": "<collection>", "id": "<id>"\} \\
 	      where <collection> is the name of a collection\\
 	      expected response: collection size
 
 	\item{getCollection(collection)}
 	      \\
-	      syntax: \{"cmd": "GET\_COLL", "par": "<collection>"\} \\
+	      syntax: \{"cmd": "GET\_COLL", "par": "<collection>", "id": "<id>"\} \\
 	      expected response: data set
 
 	\item{getRecordsInRange(collection, key, start, end)}
 	      \\
-	      syntax: \{"cmd": "GET\_RECORDS\_RANGE", "par": "<collection>", "key": "<keyvalue>", "start": "<startvalue>", "end:", "<endvalue>"\} \\
+	      syntax: \{"cmd": "GET\_RECORDS\_RANGE", "par": "<collection>", "key": "<keyvalue>", "start": "<startvalue>", "end": "<endvalue>", "id": "<id>"\} \\
 	      where <key> is the name of a key in the given collection and <startvalue> and <endvalue> are valid values for this key\\
 	      expected response: data set
 
 	\item{getRecordsInRangeSize(collection, key, start, end)}
 	      \\
-	      syntax: \{"cmd": "GET\_RECORDS\_RANGE\_SIZE", "par": "<collection>", "key": "<keyvalue>", "start": "<startvalue>", "end:", "<endvalue>"\} \\
+	      syntax: \{"cmd": "GET\_RECORDS\_RANGE\_SIZE", "par": "<collection>", "key": "<keyvalue>", "start": "<startvalue>", "end": "<endvalue>", "id": "<id>"\} \\
 	      expected response: collection size
 
 \end{itemize}
 
 \subsubsection{Messages from server to client:}
 \begin{itemize}
+	\item{session control}
+	      \\
+	      syntax: \{"session": "<status>", "id": "<id>"\} \\
+	      where <status> is either "OK" or "FAIL"\\
+
 	\item{list of collections}
 	      \\
-	      syntax: \{"cmd": "LIST\_COL", "par": ["<collection>"]\} \\
+	      syntax: \{"cmd": "LIST\_COL", "par": ["<collection>"], "id": "<id>"\} \\
 	      where <collection> is the name of a collection\\
 
 	\item{collection size}
 	      \\
-	      syntax: \{"cmd": "COLL\_SIZE", "par": "<size>"\} \\
+	      syntax: \{"cmd": "COLL\_SIZE", "par": "<size>", "id": "<id>"\} \\
 	      where <size> is the number of records in this collection\\
 	\item{data set}
 	      \\
-	      syntax: \{"cmd": "DATA", "par": [<record>]\} \\
+	      syntax: \{"cmd": "DATA", "par": [<record>], "id": "<id>"\} \\
 	      where each record is a JSON object
 \end{itemize}
 
@@ -325,7 +343,7 @@ An overview of the system can be seen in \autoref{fig:class_back_end}. Smaller s
 
 The connection to the client is handled in the class Hub which contains handlers for the network interface. This class uses a separate class (ClientProtocolHandler) to parse and handle requests from the handler. This setup is according to the strategy design pattern and allows easily modifying or even replacing the client server-protocol.
 The Hub class and the ClientProtocolHandler access the database via an object that implements the IUserSession interface and encapsulates the database session. Currently there is only an implementation for MongoDB access (MongoDBUserSession), but the abstraction via the IUserSession interface allows to add classes that offer access to Kafka or other databases.
-Classes that implement IUserSession are instantiated with a factory Method (UserSession()) which guarantees that the returned object represents a successfully logged in database session.\\
+Classes that implement IUserSession are instantiated with a factory Method (UserSession()) which guarantees that the returned object represents a successfully logged in database session.
 
 
 \subsubsection{Class Diagram}
@@ -649,7 +667,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 	      \begin{itemize}
 		      \item[-]database
 		            \\Type : IUserSession
-		            \\ The database we use during a user session.
+		            \\ The database we use during a user session. A non-null object represents a successfully logged in user session.
 	      \end{itemize}
 	      Methods
 	      \begin{itemize}
