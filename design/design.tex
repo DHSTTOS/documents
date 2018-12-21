@@ -25,11 +25,10 @@
 \author{PSE Group}
 
 %% Title (and possibly subtitle) of the thesis
-\title{
-Design}
+\title{Real-time visualization of analyzed industrial communication network traffic\\ \hfill \\Design}
 
 %% Type of the thesis 
-\thesistype{PSE}
+%\thesistype{PSE}
 
 %% The advisors are PhD Students or Postdocs
 \advisor{M.Sc. Ankush Meshram}
@@ -87,7 +86,7 @@ Design}
 \hfill
 
 \begin{center}
-	\large{Version 1.0}
+	\large{Version 1.0.1}
 \end{center}
 
 
@@ -233,7 +232,7 @@ An interactive early stage demo is available at \url{https://adin-frontend.netli
 
 \newpage
 
-\subsubsection{Sequence Diagram}
+\subsubsection{Sequence Diagrams}
 \begin{figure}
 	\includegraphics[max size={\textwidth}{\textheight}]{login1.pdf}
 \end{figure}
@@ -328,12 +327,13 @@ The connection to the client is handled in the class Hub which contains handlers
 The Hub class and the ClientProtocolHandler access the database via an object that implements the IUserSession interface and encapsulates the database session. Currently there is only an implementation for MongoDB access (MongoDBUserSession), but the abstraction via the IUserSession interface allows to add classes that offer access to Kafka or other databases.
 Classes that implement IUserSession are instantiated with a factory Method (UserSession()) which guarantees that the returned object represents a successfully logged in database session.\\
 
+
 \subsubsection{Class Diagram}
-The overview in  \autoref{fig:class_back_end} shows a number of classes and it's interaction with eachother. What follows is a more in-depth view of what each component of this diagram does, what data it's stored and how it fits into the overarching architecture.
+The overview in  \autoref{fig:class_back_end} shows a number of classes and their interaction with each other. What follows is a more in-depth view of what each component of this diagram does, what data it stores and how it fits into the overarching architecture.
 
 \begin{figure}
 	\includegraphics[max size={\textwidth}{\textheight}]{images/class_back-end_init.png}
-	\caption{The classes involed in the initialization setup}
+	\caption{The classes involved in the initialization setup}
 	\label{fig:class_back_end_init}
 \end{figure}
 
@@ -453,8 +453,8 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and it's
 	      \end{itemize}
 
 	\item[•]Record
-	      \\Every message that comes from kafka and needs to be added to the database has it's own Record class that inherit from this one.
-	      \\Every single class that inherits needs to be able to, using reflection, convert itself into a Bson Document where every variable is a key Value pair of the name of the variable and it's associated value.
+	      \\Every message that comes from kafka and needs to be added to the database has its own Record class that inherit from this one.
+	      \\Every single class that inherits needs to be able to, using reflection, convert itself into a Bson Document where every variable is a key Value pair of the name of the variable and its associated value.
 	      \\Variables
 	      \begin{itemize}
 		      \item[-] id
@@ -465,7 +465,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and it's
 		      \item[-]getAsDocument()
 		            \\parameters: none
 		            \\returns: A Document, containing every variable of any class inheriting from this one.
-		            \\This function checks for every variable, gets it's name and value as a string and adds it to the document that it eventually returns.
+		            \\This function checks for every variable, gets its name and value as a string and adds it to the document that it eventually returns.
 	      \end{itemize}
 
 	\item[•]PacketRecord
@@ -505,7 +505,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and it's
 		      \item[-]getters / setters
 		            \\parameters: variable
 		            \\returns: variable type
-		            \\Each variable has it's getters and setter methods.
+		            \\Each variable has its getters and setter methods.
 	      \end{itemize}
 
 	\item[•]AlarmRecord
@@ -535,7 +535,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and it's
 		      \item[-]getters / setters
 		            \\parameters: variable
 		            \\returns: variable type
-		            \\Each variable has it's getters and setter methods.
+		            \\Each variable has its getters and setter methods.
 	      \end{itemize}
 
 	\item[•]MiscRecord
@@ -551,7 +551,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and it's
 		      \item[-]getters / setters
 		            \\parameters: none
 		            \\returns: variable type
-		            \\Each variable has it's getters and setter methods.
+		            \\Each variable has its getters and setter methods.
 	      \end{itemize}
 
 	\item[•]DataProcessor
