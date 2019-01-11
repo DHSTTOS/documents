@@ -401,7 +401,8 @@ Classes that implement IUserSession are instantiated with a factory Method (User
 \subsubsection{Class Diagram}
 The overview in  \autoref{fig:class_back_end} shows a number of classes and their interaction with each other. What follows is a more in-depth view of what each component of this diagram does, what data it stores and how it fits into the overarching architecture.
 
-\begin{figure}
+\clearpage
+\begin{figure}[h!]
 	\includegraphics[max size={\textwidth}{\textheight}]{images/class_back-end_init.png}
 	\caption{The classes involved in the initialization setup}
 	\label{fig:class_back_end_init}
@@ -451,19 +452,19 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 
 
 
-	      \begin{figure}
+	      \begin{figure}[h!]
 		      \includegraphics[max size={\textwidth}{\textheight}]{images/class_back-end_mongo.png}
 		      \caption{The classes involed in reading and writing data into the database}
 		      \label{fig:class_back_end_mongo}
 	      \end{figure}
-
+\clearpage
 	\item[•]MongoClientMediator
-	      This object serves as a nexus between the users who want to get data out of the database and the consumer and dataProcessor who want to add data into the database. This class encapsulates the mongo client from the mongo API.
+	      This object serves as a nexus between the users who want to get data out of the database and the consumer and dataProcessor who want to add data into the database. This class encapsulates the mongo client from the mongo API. This means that any user wanting to sign in has to have valid credentials in the database, effectively relegating UAC to mongoDB.
 	      \\Variables
 	      \begin{itemize}
 		      \item[-] client
 		            \\type: MongoClient
-		            \\ An instance of the Mongo Client from the official java API.
+		            \\ An instance of the Mongo Client from the official java API. 
 		      \item[-] dataProc
 		            \\ A reference to the data processor class for this client.
 	      \end{itemize}
@@ -701,12 +702,12 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\parameters: Records array of the records to be processed
 	      \end{itemize}
 
-	      \begin{figure}
+	      \begin{figure}[h!]
 		      \includegraphics[max size={\textwidth}{\textheight}]{images/class_back-end_hub.png}
 		      \caption{The classes involed in the communication between the server and the client}
 		      \label{fig:class_back_end_hub}
 	      \end{figure}
-
+\clearpage
 	\item[•]Hub
 	      \\
 	      This class implements the network handlers for the websocket connection to the client and access methods for a database connection.
@@ -789,7 +790,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\String key - the parameter used for filtering
 		            \\String start and end - range for the filtering
 		            \\returns: number of elements matching the range as int
-		            \\Returns the number of records in the specified
+		            \\Returns the number of records in the specified\newpage
 		            collection for which the value of the specified
 		            key is within the range [start, end).
 	      \end{itemize}
@@ -872,37 +873,44 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 \end{figure}
 \newpage
 
-\subsubsection{Sequence Diagram}
-The following diagram show the initalization sequence order, the correspoding class diagram is \autoref{fig:class_back_end_init}, the program dependes on a couple of services namely (in order),the zookeper serivce, the kafka server service and the mongoDB service. Once all services are up and running the MongoConsumer is created and can start consuming messages and the Hub can start listening to client logins, requests, etc.
-\begin{figure}
+\subsubsection{Sequence Diagrams}
+\autoref{fig:seq_server_init}  shows the initalization sequence order, the correspoding class diagram is \autoref{fig:class_back_end_init}, the program dependes on a couple of services namely (in order),the zookeper serivce, the kafka server service and the mongoDB service. Once all services are up and running the MongoConsumer is created and can start consuming messages and the Hub can start listening to client logins, requests, etc.
+\begin{figure}[h!]
 	\includegraphics[max size={\textwidth}{\textheight}]{images/sequence_server_init.png}
 	\caption{Initialization sequence and message consumption}
+	\label{fig:seq_server_init}
 \end{figure}
-\newpage
+
 
 \subsubsection{Activity Diagram}
-\begin{figure}
-	\includegraphics[max size={\textwidth}{\textheight}]{images/activity_MongoConsumer.png}
-	\caption{Message consumption workflow}
-\end{figure}
-\newpage
 
-\begin{figure}
-	\includegraphics[angle=90,origin=c,max size={\textheight}{\textwidth}]{images/activity_ProcessData.png}
-	\caption{Processing Collection/Records workflow}
-\end{figure}
-\newpage
-
-For user access control the built-in UAC system in MongoDB is used, whereas every user can have roles assign to them.
+As previously mentioned for UAC the built-in UAC in MongoDB is used. \\
+\autoref{fig:act_UAC} shows the workflow on adding new roles and new user, who upon creation have a role assigned to them, to MongoDB.
 \\
 A Role determines what can be done and seen within a database. For the purposes of the ADIN INSPECTOR there are three basic roles,
 Admin, Operator and Analyst.
-The admin role can create and destroy users as well as assign specific roles to them. An analyst can see all collectoins on the database and an Operator can only see part of them.
-The following Diagram workflow shows the user/role creation workflow an Administrator can use.
+The admin role , created by default, can create and destroy users as well as assign specific roles to them. An analyst can see all collectoins on the database and an Operator can only see part of them.
 
-\begin{figure}
+\begin{figure}[h!]
+	\includegraphics[max size={\textwidth}{\textheight}]{images/activity_MongoConsumer.png}
+	\caption{Initialization and message consumption workflow.}
+	\label{fig:act_consume}
+\end{figure}
+\clearpage
+
+\begin{figure}[h!]
+	\includegraphics[angle=90,origin=c,max size={\textheight}{\textwidth}]{images/activity_ProcessData.png}
+	\caption{This diagram shows the processing of Collections and records as well as the addition of extracted data back into the database.}
+	\label{fig:act_proc_data}
+\end{figure}
+\clearpage
+
+
+\begin{figure}[h!]
 	\includegraphics[max size={\textwidth}{\textheight}]{images/activity_User-Management.png}
 	\caption{User Management workflow}
+	\label{fig:act_UAC}
 \end{figure}
+\clearpage
 
 \end{document}
