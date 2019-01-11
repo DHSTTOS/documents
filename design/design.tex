@@ -124,11 +124,15 @@ Design}
 
 \section{Design}\label{sec:intro}
 \subsection{Front-End}
-This subsection deals with the front-end of the ADIN INSPECTOR - the UI elements the GUI consists of, and how states are handled. A series of final UI design mockups are presented under UI Design Mockups subsection, whereas an overview of the GUI can be seen in \autoref{fig:gui_overview}.\\
-\\
-An early stage interactive demo is available at \url{https://adin-frontend.netlify.com}
+This subsection describes the front-end of the ADIN INSPECTOR - the UI elements the GUI consists of, and how states are handled. A series of final UI design mockups are presented under UI Design Mockups subsection, whereas an overview of the GUI classes can be seen in \autoref{fig:gui_overview}.\\
+
+The GUI elements are implemented in \href{https://reactjs.org/}{\color{blue}{React}} and \href{https://material-ui.com/}{\color{blue}{Material UI}}, whereas the internal logic and application state management are written with \href{https://mobx.js.org/}{\color{blue}{MobX}}.
 
 \subsubsection{UI Design Mockups}
+
+An early stage interactive demo is available at \url{https://adin-frontend.netlify.com}.\\
+
+
 
 \begin{figure}[hp]
 	\begin{adjustbox}
@@ -212,7 +216,7 @@ An early stage interactive demo is available at \url{https://adin-frontend.netli
 	\begin{adjustbox}
 		{addcode={\begin{minipage}{\width}}
 						{\caption{%
-						Adding additional or configuring existing diagram
+							Adding additional or configuring existing diagram
 						}
 						\label{fig:mockup_add_more_diagram_config}
 					\end{minipage}}
