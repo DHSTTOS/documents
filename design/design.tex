@@ -525,7 +525,8 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\String start and end ranges for the filtering
 		            \\returns: number of elements matching the range as int
 		      \item[-]getAvailableCollections
-		            \\parameters: String, name of the collection to query
+		            \\parameters: -
+		            \\returns: String array with collection names
 		            \\Returns an array with the names of the collections available to the current user.
 
 
@@ -751,30 +752,30 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\returns: void
 		            \\Event handler for errors/exceptions during communication.
 		      \item[-]createUserSession
-		            \\parameters: session - the current session
+		            \\parameters: Session session - the current session
 		            \\String username - the user id to login with
 		            \\String password - the password
 		            \\returns: IUserSession
 		            \\Delegate to the IUserSession method to instantiate a new UserSession and log in into the database using the given credentials.
 
 		      \item[-]getAvailableCollections
-		            \\parameters: session - the current session
+		            \\parameters: Session session - the current session
 		            \\returns: String array with collection names
 		            \\Returns an array with the names of the collections available to the current user.
 
 		      \item[-]getCollectionSize
-		            \\parameters: session - the current session
+		            \\parameters: Session session - the current session
 		            \\String collection - the collection to query
 		            \\returns: long - the number of records
 		            \\Returns the number of records in the specified collection.
 
 		      \item[-]getCollection
-		            \\parameters: session - the current session
+		            \\parameters: Session session - the current session
 		            \\String - name of a collection
 		            \\returns: String array containing all entries of the collection
 
 		      \item[-]getRecordsInRange
-		            \\parameters: session - the current session
+		            \\parameters: Session session - the current session
 		            \\String - name of the collection to query
 		            \\String key - the parameter used for filtering
 		            \\String start and end - range for the filtering
@@ -786,7 +787,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            they are in the collection.
 
 		      \item[-]getRecordsInRangeSize
-		            \\parameters: session - the current session
+		            \\parameters: Session session - the current session
 		            \\String - name of the collection to query
 		            \\String key - the parameter used for filtering
 		            \\String start and end - range for the filtering
