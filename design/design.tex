@@ -432,7 +432,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 
 	\item[•]MongoConsumer
 	      \\The Mongo Consumer, as the name implies, consumes all messages from all topics in the Kafka messaging system. Once a message is found it is passed along to the Mongo Client for further processing.
-	      \\Variables
+	      \\Attributes
 	      \begin{itemize}
 		      \item[-]clientMediator
 		            \\Type : MongoClientMediator
@@ -465,7 +465,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 \clearpage
 	\item[•]MongoClientMediator
 	      This object serves as a nexus between the users who want to get data out of the database and the consumer and dataProcessor who want to add data into the database. This class encapsulates the mongo client from the mongo API. This means that any user wanting to sign in has to have valid credentials in the database, effectively relegating UAC to mongoDB.
-	      \\Variables
+	      \\Attributes
 	      \begin{itemize}
 		      \item[-] client
 		            \\type: MongoClient
@@ -535,7 +535,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 	\item[•]Record
 	      \\Every message that comes from kafka and needs to be added to the database has its own Record class that inherit from this one.
 	      \\Every single class that inherits needs to be able to, using reflection, convert itself into a Bson Document where every variable is a key Value pair of the name of the variable and its associated value.
-	      \\Variables
+	      \\Attributes
 	      \begin{itemize}
 		      \item[-] id
 		            \\type: String
@@ -550,7 +550,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 
 	\item[•]PacketRecord
 	      \\Inheriting from Record, this class contains the variables that match the json string obtained from kafka.
-	      \\Variables
+	      \\Attributes
 	      \begin{itemize}
 		      \item[-] id
 		            \\type: String
@@ -590,7 +590,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 
 	\item[•]AlarmRecord
 	      \\Inheriting from Record, this class contains the variables that match the json string obtained from kafka.
-	      \\Variables
+	      \\Attributes
 	      \begin{itemize}
 		      \item[-] id
 		            \\type: String
@@ -621,7 +621,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 	\item[•]MiscRecord
 	      \\Inheriting from Record, this class is used by the data processor as an 'in-between' state before saving to the database. As well as an extension point for adding more types of records into the database programatically in the future.
 	      \\Refer to the data processor class for further data on the key value pairs.
-	      \\Variables
+	      \\Attributes
 	      \begin{itemize}
 		      \item[-] pairs
 		            \\ A Map of strings to Objects to store any 1 to many relationships
@@ -637,7 +637,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 	\item[•]DataProcessor
 	      \\This class is a mediator for each one of our data aggregators used for extraciton of features from the raw data stored in mongoDB.
 	      \\ We might want to hve multiple data processors for chaining different aggregators together or to split up the work into mutliple threads. This is dependant on further performance testing.
-	      \\Variables
+	      \\Attributes
 	      \begin{itemize}
 		      \item[-] client
 		            \\ an instance of the associated mongoClient that requested the data aggregation
@@ -653,7 +653,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 	      \end{itemize}
 	\item[•] IAggregator
 	      \\This interface is the building block for every aggregator to be applied to data
-	      \\Variables
+	      \\Attributes
 	      Methods
 	      \begin{itemize}
 		      \item[-]processData
@@ -720,7 +720,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 	\item[•]Hub
 	      \\
 	      This class implements the network handlers for the websocket connection to the client. It also has wrapper methods that delegate the database commands to the appropriate IUserSession object.
-	      \\Variables
+	      \\Attributes
 	      \begin{itemize}
 		      \item[-]requestHandler
 		            \\Type : ClientProtocolHandler
@@ -850,14 +850,13 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 
 	\item[•]MongoDBUserSession
 	      \\Encapsulates a user session for a connection to a MongoDB database.
-	      \\Variables
+	      \\Attributes
 	      \begin{itemize}
 		      \item[-]mongoClientMediator
 		            \\Type : mongoClientMediator
 		            \\The mediator object used to access the database
 	      \end{itemize}
 	      Methods
-	      \\Methods
 	      \begin{itemize}
 		      \item[-]MongoDBUserSession constructor
 		            \\parameters: -
@@ -910,15 +909,24 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 	\item[•]ClientRequestHandler
 	      \\This class handles client requests by parsing them, executing
 	      the requested action and producing responses.
-	      The requested actions are typically executed by calls to the database session object.
-	      \\Methods
+	      The requested actions are typically executed by calls to the appropriate methods in the Hub object. The relation between the Hub class and this class is basically the strategy design pattern with a single strategy.
+	      \\Attributes
 	      \begin{itemize}
+		      \item[-]hub
+		            \\Type : Hub
+		            \\The Hub object to work with
+	      \end{itemize}
+	      Methods
+	      \begin{itemize}
+		      \item[-]ClientRequestHandler
+		            \\parameter: Hub hub - the Hub object to work with
+		            \\The constructor; sets the hub attribute.
+
 		      \item[-]handleRequest
-		            \\parameters: \\IUserSession  dbSession - the current database session
-		            \\Session session - the current client session
+		            \\parameters: Session session - the current client session
 		            \\String message - the client request to process
 		            \\returns: String - the response to be sent to the client
-		            \\Parse the message from the client, execute the requested action (typically a database query)  and construct the response message.
+		            \\Parse the message from the client, execute the requested action, and construct the response message.
 	      \end{itemize}
 
 
