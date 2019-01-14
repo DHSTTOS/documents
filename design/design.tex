@@ -715,17 +715,15 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 \clearpage
 	\item[•]Hub
 	      \\
-	      This class implements the network handlers for the websocket connection to the client and access methods for a database connection.
+	      This class implements the network handlers for the websocket connection to the client. It also has wrapper methods that delegate the database commands to the appropriate IUserSession object.
 	      \\Variables
 	      \begin{itemize}
 		      \item[-]requestHandler
 		            \\Type : ClientProtocolHandler
-		            \\ The strategy object we call for the actual parsing of the client requests.
-	      \end{itemize}
-	      \begin{itemize}
-		      \item[-]database
-		            \\Type : IUserSession
-		            \\ The database we use during a user session. A non-null object represents a successfully logged in user session.
+		            \\The strategy object we call for the actual parsing of the client requests.
+		      \item[-]sessions
+		            \\Type : map<Session, IUserSession>
+		            \\A map that connects a client communication session to a database session.  A non-null entry represents a successfully logged in user session.
 	      \end{itemize}
 	      Methods
 	      \begin{itemize}
@@ -749,6 +747,50 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\Throwable t - the exception that occurred
 		            \\returns: void
 		            \\Event handler for errors/exceptions during communication.
+		      \item[-]createUserSession
+		            \\parameters: session - the current session
+		            \\String username - the user id to login with
+		            \\String password - the password
+		            \\returns: IUserSession
+		            \\Delegate to the IUserSession method to instantiate a new UserSession and log in into the database using the given credentials.
+
+		      \item[-]getAvailableCollections
+		            \\parameters: session - the current session
+		            \\returns: String array with collection names
+		            \\Returns an array with the names of the collections available to the current user.
+
+		      \item[-]getCollectionSize
+		            \\parameters: session - the current session
+		            \\String collection - the collection to query
+		            \\returns: long - the number of records
+		            \\Returns the number of records in the specified collection.
+
+		      \item[-]getCollection
+		            \\parameters: session - the current session
+		            \\String - name of a collection
+		            \\returns: String array containing all entries of the collection
+
+		      \item[-]getRecordsInRange
+		            \\parameters: session - the current session
+		            \\String - name of the collection to query
+		            \\String key - the parameter used for filtering
+		            \\String start and end - range for the filtering
+		            \\returns: String array containing all entries of the collection within the filter range
+		            \\ Returns an array containing all records of this
+		            collection for which the value of the
+		            specified key is in the range [start, end).
+		            The records will be in the same order as
+		            they are in the collection.
+
+		      \item[-]getRecordsInRangeSize
+		            \\parameters: session - the current session
+		            \\String - name of the collection to query
+		            \\String key - the parameter used for filtering
+		            \\String start and end - range for the filtering
+		            \\returns: number of elements matching the range as int
+		            \\Returns the number of records in the specified\newpage
+		            collection for which the value of the specified
+		            key is within the range [start, end).
 	      \end{itemize}
 
 
