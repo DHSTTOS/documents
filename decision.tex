@@ -1,0 +1,148 @@
+%% LaTeX file for Design representation
+%% design.tex
+%% 
+%% Karlsruhe Institute of Technology
+%% Version 1.0, 2018-12-13
+
+%% Available page modes: oneside, twoside
+%% Available languages: english, ngerman
+%% Available modes: draft, final (see README)
+\documentclass[oneside, english, final]{design/design}
+
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{pdfpages}
+\usepackage[export]{adjustbox}
+\usepackage{hyperref}
+
+\hypersetup{hidelinks,
+backref=true,
+pagebackref=true,
+hyperindex=true,
+breaklinks=true,
+colorlinks=true, linkcolor=black,
+urlcolor=blue,
+bookmarks=true,
+bookmarksopen=false,
+pdftitle={Title},
+pdfauthor={Author}}
+
+%usepackage{lipsum}
+
+
+%% ---------------------------------
+%% | Information about the thesis  |
+%% ---------------------------------
+
+%% Name of the author
+\author{PSE Group}
+
+%% Title (and possibly subtitle) of the thesis
+\title{Real-time visualization of analyzed industrial communication network traffic\\ \hfill \\Design Decisions}
+
+%% Type of the thesis 
+%\thesistype{PSE}
+
+%% The advisors are PhD Students or Postdocs
+\advisor{M.Sc. Ankush Meshram}
+%\begin{document}
+
+
+%\end{document}
+\thispagestyle{empty}
+
+\settitle
+
+%% --------------------------------
+%% | Settings for word separation |
+%% --------------------------------
+
+%% Describe separation hints here.
+%% For more details, see 
+%% http://en.wikibooks.org/wiki/LaTeX/Text_Formatting#Hyphenation
+\hyphenation{
+% me-ta-mo-del
+}
+
+%% --------------------------------
+%% | Bibliography                 |
+%% --------------------------------
+
+%% Use biber instead of BibTeX, see README
+\usepackage[citestyle=numeric,style=numeric,backend=biber]{biblatex}
+\usepackage{microtype}
+
+\addtolength{\belowcaptionskip}{-10pt}
+\setlength{\textfloatsep}{10pt plus 1.0pt minus 2.0pt}
+%\addtolength{\abovecaptionskip}{-100pt}
+\frenchspacing
+%% ====================================
+%% ====================================
+%% ||                                ||
+%% || Beginning of the main document ||
+%% ||                                ||
+%% ====================================
+%% ====================================
+\begin{document}
+\nocite{*}
+
+%% Set PDF metadata
+\setpdf
+
+%% Set the title
+\maketitle
+
+%% ----------------
+%% |   Abstract   |
+%% ----------------
+
+\hfill
+
+\begin{center}
+	\large{Version 1.0.0}
+\end{center}
+
+
+%% The text is included from the following files:
+%% - sections/abstract
+\thispagestyle{empty}
+\begin{abstract}
+	\thispagestyle{empty}
+\end{abstract}
+
+%% -----------------
+%% |   Main part   |
+%% -----------------
+\thispagestyle{empty}
+\newpage
+\thispagestyle{empty}
+\tableofcontents
+\cleardoublepage
+\setcounter{page}{1}
+
+
+\section{Overall Design}\label{sec:overall}
+
+\section{Front end}\label{sec:frontend}
+\begin{itemize}
+\item[]{}
+
+\end{itemize}
+
+\section{Client-Hub Communication}\label{sec:communication}
+\begin{itemize}
+\item{The communication protocol websockets was selected as it is more performant than http and supported by both Javascript and Java.}
+\end{itemize}
+
+
+\section{Back end}\label{sec:backend}
+\begin{description}
+\item[Java as programming language]
+Reason: it has APIs for MongoDB, Kafka, and websockets and is well supported by development tools (testing, deployment etc.).
+\item[feeding the data from Kafka to the MongoDB and having the Hub access only the MongoDB]
+Reason: to simplify data processing (filtering, aggregating).
+\item[Apache Tomcat as webserver]
+Reason: established platform for web applications, integrates well into a java-oriented development environment.
+\end{description}
+
+\end{document}
