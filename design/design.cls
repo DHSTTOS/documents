@@ -92,8 +92,8 @@
 
 %% variables for title page
 \newcommand{\theinstitute}{\ifcurrentbaselanguage{English}
-    {Fraunhofer Institute for Systems and Innovation Research ISI}
-    {Fraunhofer-Institut fÃ¼r System- und Innovationsforschung ISI)}}
+    {Fraunhofer Institute of Optronics, System Technologies and Image Exploitation IOSB}
+    {Fraunhofer-Institut für Optronik, Systemtechnik und Bildauswertung IOSB)}}
 \newcommand{\thethesistype}{}
 \newcommand{\theadvisor}{}
 

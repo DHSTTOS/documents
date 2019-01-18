@@ -100,7 +100,7 @@ pdfauthor={Author}}
 \hfill
 
 \begin{center}
-	\large{Version 1.1.0}
+	\large{Version 1.1.1}
 \end{center}
 
 
@@ -308,7 +308,7 @@ An early stage interactive demo is available at \url{https://adin-frontend.netli
 
 \begin{figure}[h!]
 	\includegraphics[max size={\textwidth}{\textheight}]{option.pdf}
-	\caption{Selecting a specific option from a drow-down menu.}
+	\caption{Selecting a specific option from a drop-down menu.}
 \end{figure}
 
 \begin{center}
@@ -427,7 +427,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\ parameters: String of arguments from the console
 		            \\ returns: void
 		            \\ App entry point.
-		            \\ We load the config.properties life and use the path provided to start the zookeper, kafka and mongodb services
+		            \\ We load the config.properties life and use the path provided to start the zookeeper, kafka and mongodb services
 	      \end{itemize}
 
 
@@ -511,7 +511,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 
 		      \item[-]getCollectionSize
 		            \\parameters: String, name of a collection
-		            \\returns: the number of entries in the collectoin as int
+		            \\returns: the number of entries in the collection as int
 
 		      \item[-]getRecordsInRange
 		            \\parameters: String, name of the collection to query
@@ -561,6 +561,8 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		      \item[-] L2Protocol
 		            \\type: String
 		      \item[-] SourceMACAddress
+		            \\type: String
+		      \item[-] L3Protocol
 		            \\type: String
 		      \item[-] L4Protocol
 		            \\type: String
@@ -662,7 +664,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 	      \end{itemize}
 
 	\item[•] FlowRatePerSecond
-	      \\Implements IAggregator. This calculates, per port, the outgoing and ingoing connections.
+	      \\Implements IAggregator. This calculates, per port, the outgoing and incoming connections.
 	      A record processed by this aggregator is stored in a collection as follows:
 	      \begin{verbatim} 
 		  Name of collection: collectionName\_FlowratePerSec
@@ -688,7 +690,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 	      \end{itemize}
 
 	\item[•] NumberOfConnectionsPerNodePerSecond
-	      \\Implements IAggregator. This calculates the outgoing and ingoing connections.
+	      \\Implements IAggregator. This calculates the outgoing and incoming connections.
 	      A record processed by this aggregator is stored in a collection as follows:
 	      \begin{verbatim} 
 		  Name of collection: collectionName\_FlowratePerSec
@@ -793,12 +795,13 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\String key - the parameter used for filtering
 		            \\String start and end - range for the filtering
 		            \\returns: number of elements matching the range as int
-		            \\Returns the number of records in the specified\newpage
+		            \\Returns the number of records in the specified
 		            collection for which the value of the specified
 		            key is within the range [start, end).
 	      \end{itemize}
 
 
+	\newpage
 	\item[•]IUserSession
 	      \\An IUserSession object encapsulates a data base session.
 	      On instantiation an IUserSession connects to a database using
@@ -842,13 +845,13 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\String key - the parameter used for filtering
 		            \\String start and end - range for the filtering
 		            \\returns: number of elements matching the range as int
-		            \\Returns the number of records in the specified\newpage
+		            \\Returns the number of records in the specified
 		            collection for which the value of the specified
 		            key is within the range [start, end).
 	      \end{itemize}
 
 
-
+	\newpage
 	\item[•]MongoDBUserSession
 	      \\Encapsulates a user session for a connection to a MongoDB database.
 	      \\Attributes
@@ -954,7 +957,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 \clearpage
 
 \subsubsection{Sequence Diagrams}
-\autoref{fig:seq_server_init}  shows the initalization sequence order, the correspoding class diagram is \autoref{fig:class_back_end_init}, the program dependes on a couple of services namely (in order),the zookeper serivce, the kafka server service and the mongoDB service. Once all services are up and running the MongoConsumer is created and can start consuming messages and the Hub can start listening to client logins, requests, etc.
+\autoref{fig:seq_server_init}  shows the initalization sequence order, the correspoding class diagram is \autoref{fig:class_back_end_init}, the program dependes on a couple of services namely (in order), the zookeeper serivce, the kafka server service and the mongoDB service. Once all services are up and running the MongoConsumer is created and can start consuming messages and the Hub can start listening to client logins, requests, etc.
 \begin{figure}[h!]
 	\includegraphics[max size={\textwidth}{\textheight}]{images/sequence_server_init.png}
 	\caption{Initialization sequence and message consumption}
@@ -969,7 +972,7 @@ As previously mentioned for UAC the built-in UAC in MongoDB is used. \\
 \\
 A Role determines what can be done and seen within a database. For the purposes of the ADIN INSPECTOR there are three basic roles,
 Admin, Operator and Analyst.
-The admin role , created by default, can create and destroy users as well as assign specific roles to them. An analyst can see all collectoins on the database and an Operator can only see part of them.
+The admin role , created by default, can create and destroy users as well as assign specific roles to them. An analyst can see all collections on the database and an Operator can only see part of them.
 
 \begin{figure}[h!]
 	\includegraphics[max size={\textwidth}{\textheight}]{images/activity_MongoConsumer.png}
