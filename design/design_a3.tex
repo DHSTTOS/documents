@@ -290,13 +290,15 @@ An early stage interactive demo is available at \url{https://adin-frontend.netli
 
 \begin{figure}[h!]
 	\includegraphics[max size={\textwidth}{\textheight}]{login1.pdf}
-	\caption{Sequence diagram of Login Authentication System.}
+	\caption{Sequence diagram of Login Authentication System. The user credentials are transmitted via https and the server returns a token to identify the following user session.}
+	\label{fig:login_https}
 \end{figure}
 \newpage
 
 \begin{figure}[h!]
 	\includegraphics[max size={\textwidth}{\textheight}]{images/ADIN_Inspector_Client-Server-Communication-login.pdf}
-	\caption{This diagram shows an alternative view of the login sequence.}
+	\caption{This diagram shows an alternative view of the login sequence where the user credentials are transmitted via the same encrypted WebSocket connections which is used for the following session.}
+	\label{fig:login_websocket}
 \end{figure}
 \newpage
 
@@ -323,20 +325,29 @@ An early stage interactive demo is available at \url{https://adin-frontend.netli
 
 
 \subsection{Client-server protocol}
-
+The client (web browser) and server communicate using the encrypted WebSocket protocol (wss://).
 Messages between client and server are exchanged as strings in JSON format.
 Communication is typically initiated by the client. Each request has a message id which is echoed back in the response to help the sender to link the response to the request. The ids can be random, they don't have to be in a specific order.
 \\
-By default, all requests apart from login will be ignored.  A communication session starts with a login request that is responded to with an "OK" session control message. Within a communication session, login is ignored and all other requests can occur in arbitrary order. On receiving a logout request, the server returns into the default state, i.e logged out.
+By default, all requests apart from login will be ignored.  A communication session starts with a login request that is responded to with an "OK" session control message. Within a communication session, login is ignored and all other requests can occur in arbitrary order. On receiving a logout request, the server returns into the default state, i.e logged out.\\
+The user credentials that the user enters in the login web page can be transmitted in two different ways.
+In the first case they are sent via https with the POST method to the web server and the server returns a token which the client (the web browser) will save in a cookie and then transmit to the server in the WebSocket session with the LOGIN\_TOKEN message to authenticate the WebSocket session (see \autoref{fig:login_https}).
+In the alternative case the client opens an encrypted WebSocket connection to the server and sends the user credentials with the LOGIN message; i.e user authentication and date communication take place within the same WebSocket session (see \autoref{fig:login_websocket}).\\
+All communication, including the user authentication, uses https or wss, respectively, both of which use TLS/SSL encryption. The MongoDB data base doesn't store user passwords in plaintext but stores a hashed value derived from the password.\\
+\hfill
 \\
 In the following list words in angle brackets ("<>") are placeholders.
-\\
 
 \subsubsection{Requests from client to server:}
 \begin{itemize}
 	\item{login}
 	      \\
 	      syntax: \{"cmd": "LOGIN", "user": "<username>", "pwd": "<password>", "id": "<id>"\} \\
+	      expected response: session control
+
+	\item{login via token}
+	      \\
+	      syntax: \{"cmd": "LOGIN\_TOKEN", "token": "<token>", "id": "<id>"\} \\
 	      expected response: session control
 
 	\item{logout}
@@ -722,7 +733,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 \clearpage
 	\item[•]Hub
 	      \\
-	      This class implements the network handlers for the websocket connection to the client. It also has wrapper methods that delegate the database commands to the appropriate IUserSession object.
+	      This class implements the network handlers for the WebSocket connection to the client. It also has wrapper methods that delegate the database commands to the appropriate IUserSession object.
 	      \\Attributes
 	      \begin{itemize}
 		      \item[-]requestHandler
@@ -737,7 +748,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		      \item[-]handleOpen
 		            \\parameters: Session session - the current session
 		            \\returns: void
-		            \\Event handler for the start of websocket connection.
+		            \\Event handler for the start of WebSocket connection.
 		      \item[-]handleClose
 		            \\parameters: Session session - the current session
 		            \\returns: void
@@ -799,7 +810,6 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            collection for which the value of the specified
 		            key is within the range [start, end).
 	      \end{itemize}
-
 
 	\newpage
 	\item[•]IUserSession
