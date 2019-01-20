@@ -99,7 +99,7 @@ pdfauthor={Author}}
 \hfill
 
 \begin{center}
-	\large{Version 1.1.1}
+	\large{Version 1.2.0}
 \end{center}
 
 
@@ -387,8 +387,8 @@ In the following list words in angle brackets ("<>") are placeholders.
 \begin{itemize}
 	\item{session control}
 	      \\
-	      syntax: \{"session": "<status>", "id": "<id>"\} \\
-	      where <status> is either "OK" or "FAIL"\\
+	      syntax: \{"cmd": "SESSION", "status": "<status>", "par": "<message>", "id": "<id>"\} \\
+	      where <status> is either "OK" or "FAIL" and <message> is a string, e.g. an error message\\
 
 	\item{list of collections}
 	      \\
@@ -776,16 +776,24 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\returns: String array with collection names
 		            \\Returns an array with the names of the collections available to the current user.
 
+		      \item[-]getCollection
+		            \\parameters: Session session - the current session
+		            \\String - name of a collection
+		            \\returns: String array containing all entries of the collection
+
+		      \item[-]getStartRecord
+		            \\parameters: String, name of a collection
+		            \\returns: the first entry of the collection as a String.
+
+		      \item[-]getEndRecord
+		            \\parameters: String, name of a collection
+		            \\returns: the last entry of the collection as a String.
+
 		      \item[-]getCollectionSize
 		            \\parameters: Session session - the current session
 		            \\String collection - the collection to query
 		            \\returns: long - the number of records
 		            \\Returns the number of records in the specified collection.
-
-		      \item[-]getCollection
-		            \\parameters: Session session - the current session
-		            \\String - name of a collection
-		            \\returns: String array containing all entries of the collection
 
 		      \item[-]getRecordsInRange
 		            \\parameters: Session session - the current session
@@ -829,14 +837,22 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\returns: String array with collection names
 		            \\Returns an array with the names of the collections available to the current user.
 
+		      \item[-]getCollection
+		            \\parameters: String - name of a collection
+		            \\returns: String array containing all entries of the collection
+
+		      \item[-]getStartRecord
+		            \\parameters: String, name of a collection
+		            \\returns: the first entry of the collection as a String.
+
+		      \item[-]getEndRecord
+		            \\parameters: String, name of a collection
+		            \\returns: the last entry of the collection as a String.
+
 		      \item[-]getCollectionSize
 		            \\parameters: String collection - the collection to query
 		            \\returns: long - the number of records
 		            \\Returns the number of records in the specified collection.
-
-		      \item[-]getCollection
-		            \\parameters: String - name of a collection
-		            \\returns: String array containing all entries of the collection
 
 		      \item[-]getRecordsInRange
 		            \\parameters: String - name of the collection to query
@@ -886,14 +902,22 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\returns: String array with collection names
 		            \\Returns an array with the names of the collections available to the current user.
 
+		      \item[-]getCollection
+		            \\parameters: String - name of a collection
+		            \\returns: String array containing all entries of the collection
+
+		      \item[-]getStartRecord
+		            \\parameters: String, name of a collection
+		            \\returns: the first entry of the collection as a String.
+
+		      \item[-]getEndRecord
+		            \\parameters: String, name of a collection
+		            \\returns: the last entry of the collection as a String.
+
 		      \item[-]getCollectionSize
 		            \\parameters: String collection - the collection to query
 		            \\returns: long - the number of records
 		            \\Returns the number of records in the specified collection.
-
-		      \item[-]getCollection
-		            \\parameters: String - name of a collection
-		            \\returns: String array containing all entries of the collection
 
 		      \item[-]getRecordsInRange
 		            \\parameters: String - name of the collection to query
