@@ -366,6 +366,16 @@ In the following list words in angle brackets ("<>") are placeholders.
 	      where <collection> is the name of a collection\\
 	      expected response: collection size
 
+	\item{getStartRecord(collection)}
+	      \\
+	      syntax: \{"cmd": "GET\_START", "par": "<collection>", "id": "<id>"\} \\
+	      expected response: data set, with an array of size 1, containing the first data point of the given collection
+
+	\item{getEndRecord(collection)}
+	      \\
+	      syntax: \{"cmd": "GET\_END", "par": "<collection>", "id": "<id>"\} \\
+	      expected response: data set, with an array of size 1, containing the last data point of the given collection
+
 	\item{getCollection(collection)}
 	      \\
 	      syntax: \{"cmd": "GET\_COLL", "par": "<collection>", "id": "<id>"\} \\
@@ -403,7 +413,7 @@ In the following list words in angle brackets ("<>") are placeholders.
 	\item{data set}
 	      \\
 	      syntax: \{"cmd": "DATA", "par": [<record>], "id": "<id>"\} \\
-	      where each record is a JSON object
+	      where each record is a JSON object describing a data point
 \end{itemize}
 
 \subsection{Back-End}
