@@ -99,7 +99,7 @@ pdfauthor={Author}}
 \hfill
 
 \begin{center}
-	\large{Version 1.2.0}
+	\large{Version 1.2.1}
 \end{center}
 
 
@@ -331,7 +331,7 @@ Communication is typically initiated by the client. Each request has a message i
 By default, all requests apart from login will be ignored.  A communication session starts with a login request that is responded to with an "OK" session control message. Within a communication session, login is ignored and all other requests can occur in arbitrary order. On receiving a logout request, the server returns into the default state, i.e logged out.\\
 The user credentials that the user enters in the login web page can be transmitted in two different ways.
 In the first case they are sent via https with the POST method to the web server and the server returns a token which the client (the web browser) will save in a cookie and then transmit to the server in the WebSocket session with the LOGIN\_TOKEN message to authenticate the WebSocket session (see \autoref{fig:login_https}).
-In the alternative case the client opens an encrypted WebSocket connection to the server and sends the user credentials with the LOGIN message; i.e user authentication and date communication take place within the same WebSocket session (see \autoref{fig:login_websocket}).\\
+In the alternative case the client opens an encrypted WebSocket connection to the server and sends the user credentials with the LOGIN message; i.e user authentication and data communication take place within the same WebSocket session (see \autoref{fig:login_websocket}).\\
 All communication, including the user authentication, uses https or wss, respectively, both of which use TLS/SSL encryption. The MongoDB data base doesn't store user passwords in plaintext but stores a hashed value derived from the password.\\
 \hfill
 \\

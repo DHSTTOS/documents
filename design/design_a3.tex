@@ -100,7 +100,7 @@ pdfauthor={Author}}
 \hfill
 
 \begin{center}
-	\large{Version 1.2.0}
+	\large{Version 1.2.1}
 \end{center}
 
 
@@ -227,19 +227,36 @@ An early stage interactive demo is available at \url{https://adin-frontend.netli
 
 \clearpage
 
+
+
+\afterpage{% Insert after the current page
+% \clearpage
+\KOMAoptions{paper=A3,paper=landscape,pagesize}
+\addtolength{\hoffset}{-4.0cm}
+\recalctypearea
+
 \subsubsection{Class Diagrams}
+\vspace{2cm}
+
 \begin{figure}[h!]
-	\begin{adjustbox}
-		{addcode={\begin{minipage}{\width}}
-						{\caption{%
-							This diagram shows an overview of GUI elements and their relationships inside the main application, when the user has successfully logged in.
+	\centering
+		\includegraphics[max size={1.2\textheight}{\textwidth}]{images/overview.png}
+		\caption{%
+			This diagram shows an overview of GUI elements and their relationships inside the main application, when the user has successfully logged in.
 						}
 						\label{fig:gui_overview}
-					\end{minipage}}
-			,rotate=90,center}
-		\includegraphics[max size={0.94\textheight}{\textwidth}]{images/overview.png}%
-	\end{adjustbox}
+	\label{fig:class_back_end}
 \end{figure}
+
+\clearpage
+\KOMAoptions{paper=A4,paper=portrait,pagesize}
+\recalctypearea
+}
+
+\clearpage
+
+
+
 
 \begin{figure}[p]
 	\vspace*{-2cm}
@@ -332,7 +349,7 @@ Communication is typically initiated by the client. Each request has a message i
 By default, all requests apart from login will be ignored.  A communication session starts with a login request that is responded to with an "OK" session control message. Within a communication session, login is ignored and all other requests can occur in arbitrary order. On receiving a logout request, the server returns into the default state, i.e logged out.\\
 The user credentials that the user enters in the login web page can be transmitted in two different ways.
 In the first case they are sent via https with the POST method to the web server and the server returns a token which the client (the web browser) will save in a cookie and then transmit to the server in the WebSocket session with the LOGIN\_TOKEN message to authenticate the WebSocket session (see \autoref{fig:login_https}).
-In the alternative case the client opens an encrypted WebSocket connection to the server and sends the user credentials with the LOGIN message; i.e user authentication and date communication take place within the same WebSocket session (see \autoref{fig:login_websocket}).\\
+In the alternative case the client opens an encrypted WebSocket connection to the server and sends the user credentials with the LOGIN message; i.e user authentication and data communication take place within the same WebSocket session (see \autoref{fig:login_websocket}).\\
 All communication, including the user authentication, uses https or wss, respectively, both of which use TLS/SSL encryption. The MongoDB data base doesn't store user passwords in plaintext but stores a hashed value derived from the password.\\
 \hfill
 \\
