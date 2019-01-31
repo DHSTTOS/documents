@@ -1,0 +1,50 @@
+\documentclass[oneside, english, final]{design}
+
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{pdfpages}
+\usepackage[export]{adjustbox}
+\usepackage{hyperref}
+
+\begin{document}
+
+{\large Deployment/Installation Manual for the ADIN Inspector System}
+
+\section{On the backend server}
+\subsection{Kafka}
+\subsection{MongoDB}
+
+\subsection{Apache Tomcat}
+\subsubsection{tomcat configuration}
+May vary depending on the specific underlying OS.
+On digital ocean's droplet hooking tomcat up to the systemd demon resulted in the server aborting and restarting in a loop; starting tomcat manually (with "catalina.sh start" as tomcat user) did work.
+
+\subsubsection{the webapps/adininsspector content}
+\begin{itemize}
+\item{copy the .jar (also the gson.jar?) to webapps/adininspector/WEB-INF/libs/}
+\item{optional, for testing: copy and make readable the websockclient2.html file.}
+\end{itemize}
+
+\subsection{Firewall}
+If a firewall is installed, allow ports
+\begin{itemize}
+\item{80, 443 for production} 
+\item{3000 (optional, for testing with npm-based webserver)}
+\item{8080, 8433 needed in the development environmnet, not for production}
+\end{itemize}
+
+\section{On the frontend server}
+\subsection{Webserver}
+\begin{itemize}
+\item{install and configure the webserver}
+\item{set up the directory with the web pages and javascript stuff}
+\end{itemize}
+
+\subsection{Firewall}
+If a firewall is installed, allow ports
+\begin{itemize}
+\item{80, 443 for production} 
+\item{3000 (optional, for testing with npm-based webserver)}
+\item{8080, 8433 needed in the development environmnet, not for production}
+\end{itemize}
+\end{document}
