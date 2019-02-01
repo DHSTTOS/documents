@@ -123,16 +123,14 @@ pdfauthor={Author}}
 
 \section{Design}\label{sec:intro}
 \subsection{Introduction}
-XXX
-\\
-\subsection{Changes in the Design}
-XXX
-\\
-from tipps.pdf 7.2, page 15:
-"Dokumentation "uber "Anderungen am Entwurf, beispielsweise entfernte oder neu hinzugef"ugte 
-Klassen und Methoden. Gruppiert (und zusammengefasst) werden sollte nach dem Grund f"ur
-die "Anderung und nicht nach der ge"anderten Klasse."
 
+This implementation report covers changes in the design from the one decribed in the original design phase
+and decribes the current state of the implementation by lists of completed and not completed requirements.
+
+
+\subsection{Changes in the Design}
+
+Changes are grouped together according to the reason for the change.
 
 \subsubsection{User Interface changes for better aesthetics and convenience}
 \begin{itemize}
@@ -211,7 +209,7 @@ die "Anderung und nicht nach der ge"anderten Klasse."
 
 \end{itemize}
 
-\subsubsection{Changes because of clarified requirements}
+\subsubsection{Changes due to clarified requirements}
 \begin{itemize}
 \item{Differing input formats for Date/Timestamp}
   \\
@@ -220,12 +218,13 @@ die "Anderung und nicht nach der ge"anderten Klasse."
 \end{itemize}
 
 
-\subsubsection{Changes because of oversights}
+\subsubsection{Changes due to oversights}
+
+These are changes and additions due to oversights and mistakes in the original design.
 
 \begin{itemize}
   \item{added dbName to MongoClientMediator since we need to know from which DB we want to read/write collections.}
 \\
-
 
   \item{Unspecified return type}
     \\
@@ -240,7 +239,8 @@ was unspecified in the Design document.
 \end{itemize}
 
 
-\subsubsection{Changes because of unexpected complexity}
+\subsubsection{Changes due to unexpected complexity}
+These changes can be attributed to lack of familiarity with the used components and libraries.
 \begin{itemize}
   \item{Workaround for Kafka's API}
     \\
@@ -279,13 +279,13 @@ was unspecified in the Design document.
 
 \newpage
 
-\subsection{List of implemented must- and should-criteria}
-\subsubsection{List of implemented must-criteria}
+\subsection{List of implemented must- and should-requirements}
+\subsubsection{List of implemented must-requirements}
 FR100, FR110, FR200, FR300, FR400, FR500, FR700, FR710, FR720, FR1110, FR1300, FR1310
 \\
 cancelled after Mike left: FR800
 
-\subsubsection{List of implemented should-criteria}
+\subsubsection{List of implemented should-requirements}
 \begin{itemize}
   \item{FR1332 filter to compute flow rate}
   \begin{itemize}
@@ -294,7 +294,7 @@ cancelled after Mike left: FR800
   \item{FR1400}
 \end{itemize}
 
-\subsubsection{List of not implemented must-criteria}
+\subsubsection{List of not implemented must-requirements}
 \begin{itemize}
   \item{FR600 dynamically change the selected/displayed components}
   \item{FR900 The amount of data can be limited via a slider [...]}
@@ -308,17 +308,27 @@ to which all diagrams must update to.
 \end{itemize}
 
 
-\subsubsection{List of not implemented should-criteria}
+\subsubsection{List of not implemented should-requirements}
 \begin{itemize}
 \item{FR1320 per-diagram filters}
 \end{itemize}
 
 
-\subsection{Delays}
-XXX
-\\
-Welche Verz"ogerungen gab es im Implementierungsplan? Kann beispielsweise als zweites
-GANTT Diagramm am Ende dargestellt werden.
+\subsection{Timeline and Delays}
+There were delays in the implementation phase caused by
+\begin{itemize}
+\item{clarification of requirements}
+\item{evaluation of graphics libraries}
+\item{familiarization with the used APIs and libraries}
+\end{itemize}
+
+\begin{figure}[h!]
+	\includegraphics[max size={\textwidth}{\textheight}]{implementation-gantt1.png}
+	\caption{The timeline.}
+	\label{fig:gantt1}
+\end{figure}
+
+
 \subsection{Overview of unit tests}
 Number of unit tests:\\
 \hfill
