@@ -123,19 +123,127 @@ pdfauthor={Author}}
 
 \section{Design}\label{sec:intro}
 \subsection{Introduction}
+XXX
+\\
 \subsection{Changes in the Design}
+XXX
+\\
 from tipps.pdf 7.2, page 15:
 "Dokumentation "uber "Anderungen am Entwurf, beispielsweise entfernte oder neu hinzugef"ugte 
 Klassen und Methoden. Gruppiert (und zusammengefasst) werden sollte nach dem Grund f"ur
 die "Anderung und nicht nach der ge"anderten Klasse."
 
+
+\subsubsection{Refactoring for cleaner code and changes for convenience reasons}
+\begin{itemize}
+\item{Add parameter
+  \\
+	Added parameter DBname to \textsf{\textbf{MongoConsumer(user, pass, dbName)}} for creating a reference to pass onto the MongoClientMediator}
+
+\item{Refactoring
+  \\
+  Add attribute \textsf{\textbf{private KafkaConsumer<String, String> consumer}} because other functions need to use the consumer}
+
+  \item{Refactor: extract instance attribute}
+    \\ 
+    Add attribute \textsf{\textbf{private MongoDatabase db}}
+    as a reference to the database all methods need to access.
+
+  \item{Convenience functions for different data types}
+    \\
+    Added variations of \textsf{\textbf{addRecordToCollection(Record record, String collection)}}
+    that take a document or an list of documents or an array of record sinstead of a Record.
+
+
+  \item{Add convenience function}
+    \\
+    Added \textsf{\textbf{getCollectionAsRecordsArrayList()}}
+    to DataProcessor.
+
+  \item{Refactor passing the current mediator object}
+  \\
+    Add parameter \textsf{\textbf{MongoClientMediator}} to \textsf{\textbf{public static void ProcessData:processData(String collectionName, MongoClientMediator clientMediator)}} so that \textsf{\textbf{processData}} can use it to write the processed data to the database. Remove attribute \textsf{\textbf{ProcessData:MongoClientMediator client}} which was used for this before.
+
+
+  \item{Add convenience function}
+    \\
+    Add method \textsf{\textbf{public static void processData(ArrayList<String> collectionNames, MongoClientMediator clientMediator)}} to process a list of collections (instead of calling \textsf{\textbf{processData}} for each collection.
+    
+  \item{Add convenience function}
+    \\
+    Added method \textsf{\textbf{public Document getNewAggregatorDocument(Date tstmp)}} for easier handling of date values.
+
+    
+  \item{Add convenience attributes}
+    \\
+    Add the variables Variables
+    \textsf{\textbf{private ArrayList<Map<String, Object>> connectionsMapList}} and
+    \textsf{\textbf{private Document currentDocument}} to the classes \textsf{\textbf{FlowRatePerSecond}} and \textsf{\textbf{NumberOfConnectionsPerNode}} to
+    keep track of which document is being processed now and which connections happened within this second.
+    
+\end{itemize}
+
+
+\subsubsection{Changes because of clarified requirements}
+\begin{itemize}
+\item{Differing input formats for Date/Timestamp}
+  \\
+  Split class \textsf{\textbf{PacketRecord}} into \textsf{\textbf{PacketRecordDesFromMongo}} and \textsf{\textbf{PacketRecordDesFromKafka}} to handle different formats.
+
+\end{itemize}
+
+
+\subsubsection{Changes because of oversights}
+
+\begin{itemize}
+  \item{added dbName to MongoClientMediator since we need to know from which DB we want to read/write collections.}
+\\
+
+
+  \item{Unspecified return type}
+    \\
+    The return type of \textsf{\textbf{public ArrayList<Document> processData( ArrayList<Record> records)}} in \textsf{\textbf{IAggregator}}
+was unspecified in the Design document.
+
+\end{itemize}
+
+
+\subsubsection{Changes because of unexpected complexity}
+\begin{itemize}
+  \item{Workaround for Kafka's API}
+    \\
+    Change \textsf{\textbf{getAllTopics()}} to \textsf{\textbf{getAllTopicsPartitions()}}:
+    return a Collection of topic partitions essentially to force kafka to send all records from the start.
+    It was complex to make kafka read all the topics from the beginning.
+    Secondary aspect: convenient because it relegates topic creation to another method.
+
+  \item{Workaround for Kafka's API}
+    \\
+    Add method \textsf{\textbf{ArrayList<String> getTopicsForProcessing()}}
+  because there are some topics in kakfka which are for internal use, e.g. \_\_consumeroffsets.
+ This returns the topics we need to process.
+	
+  \item{Exception handling}
+    \\ 
+    The constructor for class \textsf{\textbf{MongoClientMediator}} now throws a LoginFailureException instead of forwarding an unchecked exception.
+
+  \item{Converting between different APIs}
+    \\ 
+    Add method \textsf{\textbf{mongoIteratorToStringArray(MongoIterable)}}
+    because the hub expects an array but the mongodb returns a MongoIterable.
+
+\end{itemize}
+
+
 \subsection{List of implemented must- and should-criteria}
 \subsubsection{List of implemented must-criteria}
-FR100, FR110, FR200, FR300, FR400, FR700, FR710,
+FR100, FR110, FR200, FR300, FR400, FR700, FR710, FR1310
 \\
-not yet: FR500, FR800, FR900, FR910 \\
-FR1300, FR1310 filtering\\
-ask leo: FR720
+partially: FR500, FR1300
+\\
+not yet: FR800, FR900, FR910
+\\
+XXX ask leo: FR720
 
 \subsubsection{List of implemented should-criteria}
 \begin{itemize}
@@ -165,7 +273,11 @@ ask leo: FR720
 
 
 \subsection{Delays}
+XXX
+\\
 Welche Verz"ogerungen gab es im Implementierungsplan? Kann beispielsweise als zweites
 GANTT Diagramm am Ende dargestellt werden.
 \subsection{Overview of unit tests}
+XXX
+\\
 \end{document}
