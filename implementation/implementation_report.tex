@@ -277,14 +277,13 @@ was unspecified in the Design document.
 
 \end{itemize}
 
+\newpage
 
 \subsection{List of implemented must- and should-criteria}
 \subsubsection{List of implemented must-criteria}
-FR100, FR110, FR200, FR300, FR400, FR700, FR710, FR720, FR1310
+FR100, FR110, FR200, FR300, FR400, FR500, FR700, FR710, FR720, FR1110, FR1300, FR1310
 \\
-in progress: FR500, FR1300
-\\
-not yet: FR800, FR900, FR910
+cancelled after Mike left: FR800
 
 \subsubsection{List of implemented should-criteria}
 \begin{itemize}
@@ -298,9 +297,11 @@ not yet: FR800, FR900, FR910
 \subsubsection{List of not implemented must-criteria}
 \begin{itemize}
   \item{FR600 dynamically change the selected/displayed components}
+  \item{FR900 The amount of data can be limited via a slider [...]}
+to which all diagrams must update to.
+  \item{FR910 Within the slider the user is able to scroll through the timeline and the diagrams need to react in real-time.}
   \item{FR1000 auto scroll}
   \item{FR1100 pick data points, hover}
-  \item{FR1110 node-link diagram: picking both nodes and links}
   \item{FR1200 selecting data points}
   \item{FR1210 create new diagram from selected data}
   \item{FR1330}
@@ -319,6 +320,17 @@ XXX
 Welche Verz"ogerungen gab es im Implementierungsplan? Kann beispielsweise als zweites
 GANTT Diagramm am Ende dargestellt werden.
 \subsection{Overview of unit tests}
-XXX
+Number of unit tests:\\
+\hfill
 \\
+\begin{tabular}{l r}
+DataProcessor & 2\\
+Hub & 4\\
+MockMongoDBUserSession & 4\\
+MongoClientMediator & 5 \\
+MongoConsumer & 2 \\
+TestClientProtocolHandler & 2\\
+\end{tabular}
+
+
 \end{document}
