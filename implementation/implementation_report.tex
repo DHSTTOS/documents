@@ -333,13 +333,16 @@ There were delays in the implementation phase caused by
 Number of unit tests:\\
 \hfill
 \\
-\begin{tabular}{l r}
-DataProcessor & 2\\
-Hub & 4\\
-MockMongoDBUserSession & 4\\
-MongoClientMediator & 5 \\
-MongoConsumer & 2 \\
-TestClientProtocolHandler & 2\\
+\begin{tabular}{|p{0.8\textwidth}p{0.1\textwidth}}
+DataProcessor & 2\\  Test 1 and 2 both test the functionality of trying to process missing data. In both cases the aggregators responsible should not fail and simply make sure nothing gets added into the Database.\\ \\
+Hub & 4\\ Test session handling methods.\\ \\
+MockMongoDBUserSession & 4\\ \\
+MongoClientMediator & 5 \\ Test1 and 2 and 3: test different credential errors, like missing credentials or credential without access to the necessary databases. All tests cases return a LoginFailureException.\\ 
+Test 4 and 5 test handling null reference objects to adding records into MongoDB. In this case then simply, nothing is added into the database.\\ \\
+MongoConsumer & 2 \\ Test 1 : tests the case on failure to communicate with kafka, the consumer exists and reports this to the console but operation of all other parts of the program continue since failure of this does not affect working with data already stored in the database.\\
+Test2: tests case when the consumer does not have the right credentials to access the MongoDB, the Consumer should then fail to be created and call a LoginFailureException.\\ \\
+TestClientProtocolHandler & 2 \\ \\
+FormatData. & \\ Testing the GUI would be possible however, this is both complex and time consuming. Due to time constraints minimal testing was done outside of basic functionality.\\ \\
 \end{tabular}
 
 
