@@ -181,8 +181,12 @@ die "Anderung und nicht nach der ge"anderten Klasse."
     \textsf{\textbf{private Document currentDocument}} to the classes \textsf{\textbf{FlowRatePerSecond}} and \textsf{\textbf{NumberOfConnectionsPerNode}} to
     keep track of which document is being processed now and which connections happened within this second.
     
-\end{itemize}
 
+\item{Refactoring for cleaner code in protocol handling}
+  \\
+  Change the protocol parsing in class \textsf{\textbf{ClientProtocoHandler}} from a switch construct to using a private enum.
+
+\end{itemize}
 
 \subsubsection{Changes because of clarified requirements}
 \begin{itemize}
@@ -204,6 +208,10 @@ die "Anderung und nicht nach der ge"anderten Klasse."
     \\
     The return type of \textsf{\textbf{public ArrayList<Document> processData( ArrayList<Record> records)}} in \textsf{\textbf{IAggregator}}
 was unspecified in the Design document.
+
+  \item{Handling of client session state}
+    \\
+    In class \textsf{\textbf{Hub}} add attributes \textsf{\textbf{sessions}} and \textsf{\textbf{loginTokens}} to keep track of the state of client sessions.
 
 \end{itemize}
 
