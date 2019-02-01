@@ -180,7 +180,7 @@ die "Anderung und nicht nach der ge"anderten Klasse."
     \textsf{\textbf{private ArrayList<Map<String, Object>> connectionsMapList}} and
     \textsf{\textbf{private Document currentDocument}} to the classes \textsf{\textbf{FlowRatePerSecond}} and \textsf{\textbf{NumberOfConnectionsPerNode}} to
     keep track of which document is being processed now and which connections happened within this second.
-    
+
 
 \item{Refactoring for cleaner code in protocol handling}
   \\
@@ -209,9 +209,10 @@ die "Anderung und nicht nach der ge"anderten Klasse."
     The return type of \textsf{\textbf{public ArrayList<Document> processData( ArrayList<Record> records)}} in \textsf{\textbf{IAggregator}}
 was unspecified in the Design document.
 
-  \item{Handling of client session state}
+  \item{Session handling}
     \\
-    In class \textsf{\textbf{Hub}} add attributes \textsf{\textbf{sessions}} and \textsf{\textbf{loginTokens}} to keep track of the state of client sessions.
+    To handle session state, \textsf{\textbf{Hub:login()}}, \textsf{\textbf{Hub:loginWithToken()}}, and \textsf{\textbf{Hub:logout()}} were added.
+    To keep track of client session state, the private attributes \textsf{\textbf{Hub:sessions}} and \textsf{\textbf{Hub:loginTokens}} were added.
 
 \end{itemize}
 
@@ -239,6 +240,17 @@ was unspecified in the Design document.
     \\ 
     Add method \textsf{\textbf{mongoIteratorToStringArray(MongoIterable)}}
     because the hub expects an array but the mongodb returns a MongoIterable.
+
+  \item{Handling the login happening in another websocket session than the main app}
+    \\
+    To deal with a restart of the websocket connection when changing from the login page to the main page, session handling was changed. Added the \textsf{\textbf{LOGIN\_TOKEN}} request to the protocol and \textsf{\textbf{Hub:loginWithToken}}.
+
+  \item{Adapt to React and MobX}
+    \\
+    To adapt to the observer-driven architecture of React and MobX, store data from the server in datastructures \textsf{\textbf{dataStore.rawData}} and \textsf{\textbf{dataStore.alarms}}
+    instead of returning it as return values of
+    \textsf{\textbf{getAvailableCollections()}},
+    \textsf{\textbf{getCollection()}}, \textsf{\textbf{getCollectionSize()}}, \textsf{\textbf{getRecordsInRange()}} and \textsf{\textbf{getRecordsInRangeSize()}} in \textsf{\textbf{wsutils.js}}.
 
 \end{itemize}
 
