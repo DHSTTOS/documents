@@ -134,8 +134,31 @@ Klassen und Methoden. Gruppiert (und zusammengefasst) werden sollte nach dem Gru
 die "Anderung und nicht nach der ge"anderten Klasse."
 
 
+\subsubsection{User Interface changes for better aesthetics and convenience}
+\begin{itemize}
+  \item{New Login Page
+  \\
+    Opted for a different graphical design than the one in the mockups due to aesthetic reasons. The functionality and behavior of the login page remains the same as in the design docs.}
+    
+  \item{Removal of the filter button inside diagram control containers
+  \\
+  The filters now can be easily accessible inside the config modal of the diagram.}
+\end{itemize}
+
+\subsubsection{User Interface changes for usability improvements}
+\begin{itemize}
+  \item{New text input box for WebSocket endpoint
+  \\
+  Added the feature of choosing an arbitrary WebSocket endpoint by persisting the input with Browser Local Storage API, making the frontend application completely standalone and therefore largely simplified the deploy process of the entire DHSTTOS suite.}
+  
+\end{itemize}
+
 \subsubsection{Refactoring for cleaner code and changes for convenience reasons}
 \begin{itemize}
+\item{Data formatting helper function on the frontend
+  \\
+  Added a helper function \textsf{\textbf{formatData = (\{ groupName, x, y, rawData = [] \}) : Object[] }} which converts the raw data points the frontend receives from the server to structured data arrays which allows easy data passing into the diagram drawing routines.}
+  
 \item{Add parameter
   \\
 	Added parameter DBname to \textsf{\textbf{MongoConsumer(user, pass, dbName)}} for creating a reference to pass onto the MongoClientMediator}
