@@ -18,6 +18,9 @@
 \subsubsection{tomcat configuration}
 May vary depending on the specific underlying OS.
 On digital ocean's droplet hooking tomcat up to the systemd demon resulted in the server aborting and restarting in a loop; starting tomcat manually (with "catalina.sh start" as tomcat user) did work.
+\\
+Note: Tomcat needs random numbers on start (reads /dev/random or so) for ssl stuff; if the server it's running on is low on entropy (e.g. because it sees little network traffic and other activity) this can cause a delay before Tomcat actually starts to handle network requests, of up to 3 minutes.
+
 
 \subsubsection{the webapps/adininsspector content}
 \begin{itemize}
