@@ -344,7 +344,7 @@ In the following list words in angle brackets ("<>") are placeholders.
 	      \\
 	      syntax: \{"cmd": "LOGIN", "user": "<username>", "pwd": "<password>", "id": "<id>"\} \\
 	      expected response: session control with key "par" having the value "LOGIN"
-		
+
 
 	\item{authentication via token}
 	      \\
@@ -506,14 +506,14 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		      \caption{The classes involved in reading and writing data into the database}
 		      \label{fig:class_back_end_mongo}
 	      \end{figure}
-\clearpage
+	      \clearpage
 	\item[•]MongoClientMediator
 	      This object serves as a nexus between the users who want to get data out of the database and the consumer and dataProcessor who want to add data into the database. This class encapsulates the mongo client from the mongo API. This means that any user wanting to sign in has to have valid credentials in the database, effectively relegating UAC to mongoDB.
 	      \\Attributes
 	      \begin{itemize}
 		      \item[-] client
 		            \\type: MongoClient
-		            \\ An instance of the Mongo Client from the official java API. 
+		            \\ An instance of the Mongo Client from the official java API.
 		      \item[-] dataProc
 		            \\ A reference to the data processor class for this client.
 	      \end{itemize}
@@ -762,7 +762,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		      \caption{The classes involved in the communication between the server and the client}
 		      \label{fig:class_back_end_hub}
 	      \end{figure}
-\clearpage
+	      \clearpage
 	\item[•]Hub
 	      \\
 	      This class implements the network handlers for the WebSocket connection to the client. It also has wrapper methods that delegate the database commands to the appropriate IUserSession object.
@@ -851,7 +851,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            key is within the range [start, end).
 	      \end{itemize}
 
-	\newpage
+	      \newpage
 	\item[•]IUserSession
 	      \\An IUserSession object encapsulates a data base session.
 	      On instantiation an IUserSession connects to a database using
@@ -909,7 +909,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 	      \end{itemize}
 
 
-	\newpage
+	      \newpage
 	\item[•]MongoDBUserSession
 	      \\Encapsulates a user session for a connection to a MongoDB database.
 	      \\Attributes
@@ -1055,15 +1055,15 @@ Changes made between version 1.1.0 and version 2.0.0 of this document.
 \subsubsection{Changes to the client-server protocol}
 The protocol responses have been made more expressive in general.
 \begin{itemize}
-\item{Rename "LOGIN\_TOKEN" request to "AUTH".}
-\item{Rename "LIST\_COL" response to "LIST\_COLL".}
-\item{Expand "session" response with the specifier key "par"}
-\item{Expand "data set" and "collection size" responses with the key "key"}
-\item{Expand "data set" and "collection size" responses with the keys "start" and "end", if they were in the request}
-\item{"data set" and "collection size" responses will now echo back any key-value pairs not specified in the protocol}
-\item{getStartRecord, getEndRecord, and the "single data point" response were added.}
-item{getEndpoints and the "data endpoints" response were added.}
-end XXX
+	\item{Rename "LOGIN\_TOKEN" request to "AUTH".}
+	\item{Rename "LIST\_COL" response to "LIST\_COLL".}
+	\item{Expand "session" response with the specifier key "par"}
+	\item{Expand "data set" and "collection size" responses with the key "key"}
+	\item{Expand "data set" and "collection size" responses with the keys "start" and "end", if they were in the request}
+	\item{"data set" and "collection size" responses will now echo back any key-value pairs not specified in the protocol}
+	\item{getStartRecord, getEndRecord, and the "single data point" response were added.}
+	      item{getEndpoints and the "data endpoints" response were added.}
+	      end XXX
 \end{itemize}
 
 
