@@ -99,7 +99,7 @@ pdfauthor={Author}}
 \hfill
 
 \begin{center}
-	\large{Version 1.2.1}
+	\large{Version 2.0.0}
 \end{center}
 
 
@@ -333,6 +333,7 @@ The user credentials that the user enters in the login web page can be transmitt
 In the first case they are sent via https with the POST method to the web server and the server returns a token which the client (the web browser) will save in a cookie and then transmit to the server in the WebSocket session with the LOGIN\_TOKEN message to authenticate the WebSocket session (see \autoref{fig:login_https}).
 In the alternative case the client opens an encrypted WebSocket connection to the server and sends the user credentials with the LOGIN message; i.e user authentication and data communication take place within the same WebSocket session (see \autoref{fig:login_websocket}).\\
 All communication, including the user authentication, uses https or wss, respectively, both of which use TLS/SSL encryption. The MongoDB data base doesn't store user passwords in plaintext but stores a hashed value derived from the password.\\
+Responses carrying data, specifically "data set" and "collection size", will echo back any key-value pairs that are in addition to those specified in the protocol. This allows the client to add information that will help in processing the response, e.g. when requesting several "chunks" of data that will be concatenated.
 \hfill
 \\
 In the following list words in angle brackets ("<>") are placeholders.
@@ -342,17 +343,18 @@ In the following list words in angle brackets ("<>") are placeholders.
 	\item{login}
 	      \\
 	      syntax: \{"cmd": "LOGIN", "user": "<username>", "pwd": "<password>", "id": "<id>"\} \\
-	      expected response: session control
+	      expected response: session control with key "par" having the value "LOGIN"
+		
 
-	\item{login via token}
+	\item{authentication via token}
 	      \\
-	      syntax: \{"cmd": "LOGIN\_TOKEN", "token": "<token>", "id": "<id>"\} \\
-	      expected response: session control
+	      syntax: \{"cmd": "AUTH", "token": "<token>", "id": "<id>"\} \\
+	      expected response: session control with "par": "AUTH"
 
 	\item{logout}
 	      \\
 	      syntax: \{"cmd": "LOGOUT", "id": "<id>"\} \\
-	      expected response: session control
+	      expected response: session control with "par": "LOGOUT"
 
 	\item{getAvailableCollections}
 	      \\
@@ -368,12 +370,17 @@ In the following list words in angle brackets ("<>") are placeholders.
 	\item{getStartRecord(collection)}
 	      \\
 	      syntax: \{"cmd": "GET\_START", "par": "<collection>", "id": "<id>"\} \\
-	      expected response: data set, with an array of size 1, containing the first data point of the given collection
+	      expected response: single data point, with "idx": "start" and key "data" containing the first data point of the given collection
 
 	\item{getEndRecord(collection)}
 	      \\
 	      syntax: \{"cmd": "GET\_END", "par": "<collection>", "id": "<id>"\} \\
-	      expected response: data set, with an array of size 1, containing the last data point of the given collection
+	      expected response: single data point, with "idx": "end" and key "data" containing the last data point of the given collection
+
+	\item{getEndpoints(collection)}
+	      \\
+	      syntax: \{"cmd": "GET\_ENDPOINTS", "par": "<collection>", "id": "<id>"\} \\
+	      expected response: data endpoints, with the key "data" containing a array consisting of the first and the last data point of the given collection
 
 	\item{getCollection(collection)}
 	      \\
@@ -384,35 +391,51 @@ In the following list words in angle brackets ("<>") are placeholders.
 	      \\
 	      syntax: \{"cmd": "GET\_RECORDS\_RANGE", "par": "<collection>", "key": "<keyvalue>", "start": "<startvalue>", "end": "<endvalue>", "id": "<id>"\} \\
 	      where <key> is the name of a key in the given collection and <startvalue> and <endvalue> are valid values for this key\\
-	      expected response: data set
+	      expected response: data set, where key "data" contains all data points (i.e. records) from the given collection for which the given key is in the interval [start, end).
 
 	\item{getRecordsInRangeSize(collection, key, start, end)}
 	      \\
 	      syntax: \{"cmd": "GET\_RECORDS\_RANGE\_SIZE", "par": "<collection>", "key": "<keyvalue>", "start": "<startvalue>", "end": "<endvalue>", "id": "<id>"\} \\
-	      expected response: collection size
+	      expected response: collection size, where the key "par" gives the number of data points that would be returned by a getRecordsInRange() request with the same arguments.
 
 \end{itemize}
 
-\subsubsection{Messages from server to client:}
+\newpage
+
+\subsubsection{Responses from server to client:}
 \begin{itemize}
 	\item{session control}
 	      \\
-	      syntax: \{"cmd": "SESSION", "status": "<status>", "par": "<message>", "id": "<id>"\} \\
-	      where <status> is either "OK" or "FAIL" and <message> is a string, e.g. an error message\\
+	      syntax: \{"cmd": "SESSION", "par": "<specifier>", "status": "<status>", msg": "<message>", "id": "<id>"\} \\
+	      where <specifier> is one of "LOGIN", "AUTH", oder "LOGOUT", <status> is either "OK" or "FAIL" and <message> is a string, e.g. an error message\\
+	      "OK" as status for "LOGIN" and "AUTH" indicates a successful login, i.e. that the client session has started. "OK" as status for "LOGOUT" indicates that the server had ended the session and the user has been logged out.
 
 	\item{list of collections}
 	      \\
-	      syntax: \{"cmd": "LIST\_COL", "par": ["<collection>"], "id": "<id>"\} \\
-	      where <collection> is the name of a collection\\
+	      syntax: \{"cmd": "LIST\_COLL", "par": ["<collection>"], "id": "<id>"\} \\
+	      where <collection> is the name of a collection
 
 	\item{collection size}
 	      \\
-	      syntax: \{"cmd": "COLL\_SIZE", "par": "<size>", "id": "<id>"\} \\
-	      where <size> is the number of records in this collection\\
+	      syntax: \{"cmd": "COLL\_SIZE", "name": "<name>", "key", "", "par": "<size>", "id": "<id>"\} \\
+	      syntax: \{"cmd": "COLL\_SIZE", "name": "<name>", "key", "<key>", "start": "<start>", "end": "<end>", "par": "<size>", "id": "<id>"\} \\
+	      where <name> is the name of a data collection and <size> is the number of data points in this collection . If <key> is not an empty string, then <size> will be the number of data points from the given collection for which the key value is in the interval [<start>, <end>).
+
+	\item{single data point}
+	      \\
+	      syntax: \{"cmd": "DATASINGLE", "name": "<collection>", "idx": "<idx>", "data": "<data>", "id": "<id>"\} \\
+	      where <collection> is the name of a collection, "idx" has either the value "start" or "end", and <data> is a string representing a single data point in JSON format.
+
+	\item{data endpoints}
+	      \\
+	      syntax: \{"cmd": "DATA\_ENDPOINTS", "name": "<collection>", "data": ["<start>", "<end>"], "id": "<id>"\} \\
+	      where <collection> is the name of a collection and <start> and <end> are the first and last data point of this collection.
+
 	\item{data set}
 	      \\
-	      syntax: \{"cmd": "DATA", "par": [<record>], "id": "<id>"\} \\
-	      where each record is a JSON object describing a data point
+	      syntax: \{"cmd": "DATA", "name": "<name>", "key": "", "data": [<record>], "id": "<id>"\} \\
+	      syntax: \{"cmd": "DATA", "name": "<name>", "key": "<key>", "start": "<start>", "end": "<end>", "data": [<record>], "id": "<id>"\} \\
+	      where <name> is the name of a data collection and each record is a JSON object describing a data point from this collection. If <key> is not an empty string, then the data array will contain those data points from the given collection for which the key value is in the interval [<start>, <end>).
 \end{itemize}
 
 \subsection{Back-End}
@@ -1024,6 +1047,24 @@ The admin role , created by default, can create and destroy users as well as ass
 	\caption{User Management workflow}
 	\label{fig:act_UAC}
 \end{figure}
+
 \clearpage
+\subsection{Changes}
+Changes made between version 1.1.0 and version 2.0.0 of this document.
+
+\subsubsection{Changes to the client-server protocol}
+The protocol responses have been made more expressive in general.
+\begin{itemize}
+\item{Rename "LOGIN\_TOKEN" request to "AUTH".}
+\item{Rename "LIST\_COL" response to "LIST\_COLL".}
+\item{Expand "session" response with the specifier key "par"}
+\item{Expand "data set" and "collection size" responses with the key "key"}
+\item{Expand "data set" and "collection size" responses with the keys "start" and "end", if they were in the request}
+\item{"data set" and "collection size" responses will now echo back any key-value pairs not specified in the protocol}
+\item{getStartRecord, getEndRecord, and the "single data point" response were added.}
+item{getEndpoints and the "data endpoints" response were added.}
+end XXX
+\end{itemize}
+
 
 \end{document}
