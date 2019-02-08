@@ -501,7 +501,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		      \item[-]getTopicsForProcessing
 		            \\parameters: none
 		            \\returns: ArrayList<String>
-		            \\This convenience method returns a list of all topics as strings.
+		            \\This convenience method returns a list of all topics to process, excluding internal Kafka topics and real-time data since the processing call is done elsewhere, as strings.
 
 	      \end{itemize}
 
@@ -838,8 +838,27 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 
 
 	\item[•] AddressesAndLinks
-	      \\Implements IAggregator. This aggregator produces a list of network nodes that show up in the datastream and a list of connections between the nodes.
+	      \\Implements IAggregator. This aggregator produces a document containing a list of network nodes that show up in a collection and a list of connections between the nodes.
+Of importance is that nodes are unique while links do not have to be.
 	      Methods
+\begin{verbatim}
+		  Name of collection: collectionName\_AddressesAndLinks
+		  structure of record as json:
+		{
+		 "_id ": 0
+		"nodes"  :  [  
+				{"id" : "MAC / IP / Port " , "type" : "L2/3/4" , "Protocol" : "Profinet/ Ethernet etc."}
+				{"id" : "MAC / IP / Port " , "type" : "L2/3/4" , "Protocol" : "Profinet/ Ethernet etc."}
+				...
+				]
+		"links" : [ 
+			{"source" : "MAC / IP / Port " , "target" : "MAC / IP / Port "}
+			{"source" : "MAC / IP / Port " , "target" : "MAC / IP / Port "}
+			....
+			]
+		}
+\end{verbatim}
+
 	      \begin{itemize}
 		      \item[-]processData
 		            \\parameters: ArrayList records - the records to be processed
