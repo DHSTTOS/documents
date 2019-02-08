@@ -804,6 +804,25 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\returns: IUserSession
 		            \\Delegate to the IUserSession method to instantiate a new UserSession and log in into the database using the given credentials.
 
+		      \item[-]login
+		            \\parameters: Session session - the current session
+		            \\String username - the user to log in
+		            \\String password - the user's password
+		            \\returns: String
+		            \\If the username and password are valid, create a new database user session with the user logged in and return a authentication token.
+			      If the login fails, return an empty string.
+				
+		      \item[-]authenticate
+		            \\parameters: Session session - the current session
+		            \\String token - the authentication token to use
+		            \\returns: boolean
+		            \\ Return true if this token corresponds to a valid, currently logged in user session, otherwise return false.
+				
+		      \item[-]logout
+		            \\parameters: Session session - the current session
+		            \\returns: void
+		            \\End the current session and log the user out.
+				
 		      \item[-]getAvailableCollections
 		            \\parameters: Session session - the current session
 		            \\returns: String array with collection names
@@ -811,7 +830,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 
 		      \item[-]getCollection
 		            \\parameters: Session session - the current session
-		            \\String - name of a collection
+		            \\String collection - name of a collection
 		            \\returns: String array containing all entries of the collection
 
 		      \item[-]getStartRecord
@@ -1066,8 +1085,13 @@ The protocol responses have been made more expressive in general.
 \item{Expand "data set" and "collection size" responses with the keys "start" and "end", if they were in the request}
 \item{"data set" and "collection size" responses will now echo back any key-value pairs not specified in the protocol}
 \item{getStartRecord, getEndRecord, and the "single data point" response were added.}
-item{getEndpoints and the "data endpoints" response were added.}
+\item{getEndpoints and the "data endpoints" response were added.}
 end XXX
+\end{itemize}
+
+\subsubsection{Changes to the back-end}
+\begin{itemize}
+\item{Hub: methods login(), authenticate() and logout() were added.}
 \end{itemize}
 
 
