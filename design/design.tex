@@ -491,13 +491,30 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\parameters: none
 		            \\returns: an array of strings containing all the available kafka Topics.
 		            \\Asks the kafka server service which topics exists.
+
 		      \item[-]listenForRecords
 		            \\parameters: none
 		            \\returns: void
 		            \\This Method first calls getAllTopics and uses the array of topics to poll the kafka server for new messages.
 		            \\If new messages are found then the messages are passed to the Mongo Mediator for adding them to the Database.
 		            \\If no new messages are found for a topic notify the Mongo Mediator that the collection tied to the topic is ready for pre-processing.
+		      \item[-]getTopicsForProcessing
+		            \\parameters: none
+		            \\returns: ArrayList<String>
+		            \\This convenience method returns a list of all topics as strings.
+
 	      \end{itemize}
+
+
+
+	      \begin{figure}[h!]
+		      \includegraphics[max size={\textwidth}{\textheight}]{images/class_back-end_mongo.png}
+		      \caption{The classes involved in reading and writing data into the database}
+		      \label{fig:class_back_end_mongo}
+	      \end{figure}
+\clearpage
+	\item[•]MongoClientMediator
+	      This object serves as a nexus between the users who want to get data out of the database and the consumer and dataProcessor who want to add data into the database. This class encapsulates the mongo client from the mongo API. This means that any user wanting to sign in has to have valid credentials in the database, effectively relegating UAC to mongoDB.
 
 
 
@@ -524,16 +541,29 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\Initializes the client variable, throws an error if the user is not found.
 
 		      \item[-]addRecordToCollection
-		            \\parameters: String representation of a record in json format
-		            \\String name of the collection it should be added to.
+		            \\parameters: Record record - a record to add to the collection
+		            \\String collection - name of the collection it should be added to.
 		            \\returns: void
-		            \\Converts the json string into a java object, then to a bson document and uses the mongoAPI to insert it into the database.
+		            \\Converts the record to a bson document and uses the mongoAPI to insert it into the database.
+
+		      \item[-]addRecordToCollection
+		            \\parameters: Document record - a record to add to the collection
+		            \\String collection - name of the collection it should be added to.
+		            \\returns: void
+		            \\Takes a bson Document containing a record and uses the mongoAPI to insert it into the database.
 
 		      \item[-]addRecordsToCollection
-		            \\parameters: String Array of records to be added to a collection
+		            \\parameters: Array of records - the records to be added to a collection
 		            \\String name of the collection it should be added to.
 		            \\returns: void
 		            \\for each oneof the members of the array call addRecordToCollection
+		      \item[-]addRecordsToCollection
+		            \\parameters: ArrayList of Documents - the records to be added to a collection
+		            \\String name of the collection it should be added to.
+		            \\returns: void
+		            \\for each oneof the members of the array call addRecordToCollection
+
+
 
 		      \item[-]ProcessCollection
 		            \\parameters: String, name of a collection
@@ -568,6 +598,20 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\String, key of the parameter used for filtering
 		            \\String start and end ranges for the filtering
 		            \\returns: number of elements matching the range as int
+
+		      \item[-]getRecordsInRange
+		            \\parameters: String, name of the collection to query
+		            \\Object, key of the parameter used for filtering
+		            \\Object start and end ranges for the filtering
+		            \\returns: String array containing all entries of the collection within that range
+		            \\this Method is very general to allow for flexibility.For example by letting the key be, SourceIPaddresses, or a timeStamp.
+
+		      \item[-]getRecordsInRangeSize
+		            \\parameters: String, name of the collection to query
+		            \\Object, key of the parameter used for filtering
+		            \\Object start and end ranges for the filtering
+		            \\returns: number of elements matching the range as int
+
 		      \item[-]getAvailableCollections
 		            \\parameters: -
 		            \\returns: String array with collection names
@@ -592,15 +636,10 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\This function checks for every variable, gets its name and value as a string and adds it to the document that it eventually returns.
 	      \end{itemize}
 
-	\item[•]PacketRecord
+	\item[•]PacketRecordDesFromKafka
 	      \\Inheriting from Record, this class contains the variables that match the json string obtained from kafka.
 	      \\Attributes
 	      \begin{itemize}
-		      \item[-] id
-		            \\type: String
-		            \\this id is used for determining the ordering when saving to mongoDB, it's the offset of the message in the kafka messaging queue. inherited from Record
-		      \item[-] client
-		            \\type: String
 		      \item[-] L2Protocol
 		            \\type: String
 		      \item[-] SourceMACAddress
@@ -616,7 +655,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		      \item[-] DestinationIPAddress
 		            \\type: String
 		      \item[-] Timestamp
-		            \\type: String
+		            \\type: Timestamp
 		      \item[-] DestinationPort
 		            \\type: String
 		      \item[-] SourcePort
@@ -628,11 +667,57 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 
 	      Methods
 	      \begin{itemize}
+		      \item[-]constructor
+		            \\parameters: initializers for all attributes
+ 
+
 		      \item[-]getters / setters
 		            \\parameters: variable
 		            \\returns: variable type
 		            \\Each variable has its getters and setter methods.
 	      \end{itemize}
+
+	\item[•]PacketRecordDesFromMongo
+	      \\Inheriting from Record, this class contains the variables that match the json string obtained from kafka.
+	      \\Attributes
+	      \begin{itemize}
+		      \item[-] L2Protocol
+		            \\type: String
+		      \item[-] SourceMACAddress
+		            \\type: String
+		      \item[-] L3Protocol
+		            \\type: String
+		      \item[-] L4Protocol
+		            \\type: String
+		      \item[-] SourceIPAddress
+		            \\type: String
+		      \item[-] PacketSummary
+		            \\type: String
+		      \item[-] DestinationIPAddress
+		            \\type: String
+		      \item[-] Timestamp
+		            \\type: Date
+		      \item[-] DestinationPort
+		            \\type: String
+		      \item[-] SourcePort
+		            \\type: String
+		      \item[-] DestinationMACAddress
+		            \\type: String
+
+	      \end{itemize}
+
+	      Methods
+	      \begin{itemize}
+		      \item[-]constructor
+		            \\parameters: initializers for all attributes
+ 
+
+		      \item[-]getters / setters
+		            \\parameters: variable
+		            \\returns: variable type
+		            \\Each variable has its getters and setter methods.
+	      \end{itemize}
+
 
 	\item[•]AlarmRecord
 	      \\Inheriting from Record, this class contains the variables that match the json string obtained from kafka.
@@ -756,6 +841,27 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		      \item[-]processData
 		            \\parameters: Records array of the records to be processed
 	      \end{itemize}
+
+
+
+	\item[•] AddressesAndLinks
+	      \\Implements IAggregator. This aggregator produces a list of network nodes that show up in the datastream and a list of connections between the nodes.
+	      Methods
+	      \begin{itemize}
+		      \item[-]processData
+		            \\parameters: ArrayList records - the records to be processed
+			    \\returns: ArrayList<Document>
+	      \end{itemize}
+
+
+	\item[•] LoginFailureException
+	      \\Exceptions of this class are thrown by MongoClientMediator and MongoClientConsumer when login into the mongo database was not possible; usually due to invalid username or password.
+	      Methods
+	      \begin{itemize}
+		      \item[-]constructor
+		            \\parameters: String errorMessage - the error message to be reported
+	      \end{itemize}
+
 
 	      \begin{figure}[h!]
 		      \includegraphics[max size={\textwidth}{\textheight}]{images/class_back-end_hub.png}
@@ -1091,6 +1197,12 @@ end XXX
 
 \subsubsection{Changes to the back-end}
 \begin{itemize}
+\item{Added new aggregator class AddressesAndLinks}
+\item{Added class LoginFailureException}
+\item{Rename class PacketRecord to PacketRecordDesFromKafka, changed the type of timestamp}
+\item{Added class PacketRecordDesFromMongo}
+\item{MongoClientMediator: added variants of methods addRecordToCollection() and addRecordsToCollection() to handle Records and bson Documents.}
+\item{MongoClientMediator: added new method getTopicsForProcessing().}
 \item{Hub: methods login(), authenticate() and logout() were added.}
 \end{itemize}
 
