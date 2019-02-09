@@ -100,7 +100,7 @@ pdfauthor={Author}}
 \hfill
 
 \begin{center}
-	\large{Version 1.2.1}
+	\large{Version 2.0.0}
 \end{center}
 
 
@@ -143,7 +143,7 @@ An early stage interactive demo is available at \url{https://adin-frontend.netli
 						\label{fig:mockup_login}
 					\end{minipage}}
 			,center}
-		\fbox{\includegraphics[max size={\textwidth}{0.4\textheight}]{images/ui_design/login_screen.png}}
+		\fbox{\includegraphics[max size={\textwidth}{0.4\textheight}]{images/loginNew.PNG}}
 	\end{adjustbox}
 \end{figure}
 
@@ -351,6 +351,7 @@ The user credentials that the user enters in the login web page can be transmitt
 In the first case they are sent via https with the POST method to the web server and the server returns a token which the client (the web browser) will save in a cookie and then transmit to the server in the WebSocket session with the LOGIN\_TOKEN message to authenticate the WebSocket session (see \autoref{fig:login_https}).
 In the alternative case the client opens an encrypted WebSocket connection to the server and sends the user credentials with the LOGIN message; i.e user authentication and data communication take place within the same WebSocket session (see \autoref{fig:login_websocket}).\\
 All communication, including the user authentication, uses https or wss, respectively, both of which use TLS/SSL encryption. The MongoDB data base doesn't store user passwords in plaintext but stores a hashed value derived from the password.\\
+Responses carrying data, specifically "data set" and "collection size", will echo back any key-value pairs that are in addition to those specified in the protocol. This allows the client to add information that will help in processing the response, e.g. when requesting several "chunks" of data that will be concatenated.
 \hfill
 \\
 In the following list words in angle brackets ("<>") are placeholders.
@@ -360,17 +361,18 @@ In the following list words in angle brackets ("<>") are placeholders.
 	\item{login}
 	      \\
 	      syntax: \{"cmd": "LOGIN", "user": "<username>", "pwd": "<password>", "id": "<id>"\} \\
-	      expected response: session control
+	      expected response: session control with key "par" having the value "LOGIN"
 
-	\item{login via token}
+
+	\item{authentication via token}
 	      \\
-	      syntax: \{"cmd": "LOGIN\_TOKEN", "token": "<token>", "id": "<id>"\} \\
-	      expected response: session control
+	      syntax: \{"cmd": "AUTH", "token": "<token>", "id": "<id>"\} \\
+	      expected response: session control with "par": "AUTH"
 
 	\item{logout}
 	      \\
 	      syntax: \{"cmd": "LOGOUT", "id": "<id>"\} \\
-	      expected response: session control
+	      expected response: session control with "par": "LOGOUT"
 
 	\item{getAvailableCollections}
 	      \\
@@ -386,12 +388,17 @@ In the following list words in angle brackets ("<>") are placeholders.
 	\item{getStartRecord(collection)}
 	      \\
 	      syntax: \{"cmd": "GET\_START", "par": "<collection>", "id": "<id>"\} \\
-	      expected response: data set, with an array of size 1, containing the first data point of the given collection
+	      expected response: single data point, with "idx": "start" and key "data" containing the first data point of the given collection
 
 	\item{getEndRecord(collection)}
 	      \\
 	      syntax: \{"cmd": "GET\_END", "par": "<collection>", "id": "<id>"\} \\
-	      expected response: data set, with an array of size 1, containing the last data point of the given collection
+	      expected response: single data point, with "idx": "end" and key "data" containing the last data point of the given collection
+
+	\item{getEndpoints(collection)}
+	      \\
+	      syntax: \{"cmd": "GET\_ENDPOINTS", "par": "<collection>", "id": "<id>"\} \\
+	      expected response: data endpoints, with the key "data" containing a array consisting of the first and the last data point of the given collection
 
 	\item{getCollection(collection)}
 	      \\
@@ -402,35 +409,51 @@ In the following list words in angle brackets ("<>") are placeholders.
 	      \\
 	      syntax: \{"cmd": "GET\_RECORDS\_RANGE", "par": "<collection>", "key": "<keyvalue>", "start": "<startvalue>", "end": "<endvalue>", "id": "<id>"\} \\
 	      where <key> is the name of a key in the given collection and <startvalue> and <endvalue> are valid values for this key\\
-	      expected response: data set
+	      expected response: data set, where key "data" contains all data points (i.e. records) from the given collection for which the given key is in the interval [start, end).
 
 	\item{getRecordsInRangeSize(collection, key, start, end)}
 	      \\
 	      syntax: \{"cmd": "GET\_RECORDS\_RANGE\_SIZE", "par": "<collection>", "key": "<keyvalue>", "start": "<startvalue>", "end": "<endvalue>", "id": "<id>"\} \\
-	      expected response: collection size
+	      expected response: collection size, where the key "par" gives the number of data points that would be returned by a getRecordsInRange() request with the same arguments.
 
 \end{itemize}
 
-\subsubsection{Messages from server to client:}
+\newpage
+
+\subsubsection{Responses from server to client:}
 \begin{itemize}
 	\item{session control}
 	      \\
-	      syntax: \{"cmd": "SESSION", "status": "<status>", "par": "<message>", "id": "<id>"\} \\
-	      where <status> is either "OK" or "FAIL" and <message> is a string, e.g. an error message\\
+	      syntax: \{"cmd": "SESSION", "par": "<specifier>", "status": "<status>", msg": "<message>", "id": "<id>"\} \\
+	      where <specifier> is one of "LOGIN", "AUTH", oder "LOGOUT", <status> is either "OK" or "FAIL" and <message> is a string, e.g. an error message\\
+	      "OK" as status for "LOGIN" and "AUTH" indicates a successful login, i.e. that the client session has started. "OK" as status for "LOGOUT" indicates that the server had ended the session and the user has been logged out.
 
 	\item{list of collections}
 	      \\
-	      syntax: \{"cmd": "LIST\_COL", "par": ["<collection>"], "id": "<id>"\} \\
-	      where <collection> is the name of a collection\\
+	      syntax: \{"cmd": "LIST\_COLL", "par": ["<collection>"], "id": "<id>"\} \\
+	      where <collection> is the name of a collection
 
 	\item{collection size}
 	      \\
-	      syntax: \{"cmd": "COLL\_SIZE", "par": "<size>", "id": "<id>"\} \\
-	      where <size> is the number of records in this collection\\
+	      syntax: \{"cmd": "COLL\_SIZE", "name": "<name>", "key", "", "par": "<size>", "id": "<id>"\} \\
+	      syntax: \{"cmd": "COLL\_SIZE", "name": "<name>", "key", "<key>", "start": "<start>", "end": "<end>", "par": "<size>", "id": "<id>"\} \\
+	      where <name> is the name of a data collection and <size> is the number of data points in this collection . If <key> is not an empty string, then <size> will be the number of data points from the given collection for which the key value is in the interval [<start>, <end>).
+
+	\item{single data point}
+	      \\
+	      syntax: \{"cmd": "DATASINGLE", "name": "<collection>", "idx": "<idx>", "data": "<data>", "id": "<id>"\} \\
+	      where <collection> is the name of a collection, "idx" has either the value "start" or "end", and <data> is a string representing a single data point in JSON format.
+
+	\item{data endpoints}
+	      \\
+	      syntax: \{"cmd": "DATA\_ENDPOINTS", "name": "<collection>", "data": ["<start>", "<end>"], "id": "<id>"\} \\
+	      where <collection> is the name of a collection and <start> and <end> are the first and last data point of this collection.
+
 	\item{data set}
 	      \\
-	      syntax: \{"cmd": "DATA", "par": [<record>], "id": "<id>"\} \\
-	      where each record is a JSON object describing a data point
+	      syntax: \{"cmd": "DATA", "name": "<name>", "key": "", "data": [<record>], "id": "<id>"\} \\
+	      syntax: \{"cmd": "DATA", "name": "<name>", "key": "<key>", "start": "<start>", "end": "<end>", "data": [<record>], "id": "<id>"\} \\
+	      where <name> is the name of a data collection and each record is a JSON object describing a data point from this collection. If <key> is not an empty string, then the data array will contain those data points from the given collection for which the key value is in the interval [<start>, <end>).
 \end{itemize}
 
 \subsection{Back-End}
@@ -486,12 +509,18 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\parameters: none
 		            \\returns: an array of strings containing all the available kafka Topics.
 		            \\Asks the kafka server service which topics exists.
+
 		      \item[-]listenForRecords
 		            \\parameters: none
 		            \\returns: void
 		            \\This Method first calls getAllTopics and uses the array of topics to poll the kafka server for new messages.
 		            \\If new messages are found then the messages are passed to the Mongo Mediator for adding them to the Database.
 		            \\If no new messages are found for a topic notify the Mongo Mediator that the collection tied to the topic is ready for pre-processing.
+		      \item[-]getTopicsForProcessing
+		            \\parameters: none
+		            \\returns: ArrayList<String>
+		            \\This convenience method returns a list of all topics to process, excluding internal Kafka topics and real-time data since the processing call is done elsewhere, as strings.
+
 	      \end{itemize}
 
 
@@ -501,14 +530,16 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		      \caption{The classes involved in reading and writing data into the database}
 		      \label{fig:class_back_end_mongo}
 	      \end{figure}
-\clearpage
+	      \clearpage
+
+
 	\item[•]MongoClientMediator
 	      This object serves as a nexus between the users who want to get data out of the database and the consumer and dataProcessor who want to add data into the database. This class encapsulates the mongo client from the mongo API. This means that any user wanting to sign in has to have valid credentials in the database, effectively relegating UAC to mongoDB.
 	      \\Attributes
 	      \begin{itemize}
 		      \item[-] client
 		            \\type: MongoClient
-		            \\ An instance of the Mongo Client from the official java API. 
+		            \\ An instance of the Mongo Client from the official java API.
 		      \item[-] dataProc
 		            \\ A reference to the data processor class for this client.
 	      \end{itemize}
@@ -519,16 +550,29 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\Initializes the client variable, throws an error if the user is not found.
 
 		      \item[-]addRecordToCollection
-		            \\parameters: String representation of a record in json format
-		            \\String name of the collection it should be added to.
+		            \\parameters: Record record - a record to add to the collection
+		            \\String collection - name of the collection it should be added to.
 		            \\returns: void
-		            \\Converts the json string into a java object, then to a bson document and uses the mongoAPI to insert it into the database.
+		            \\Converts the record to a bson document and uses the mongoAPI to insert it into the database.
+
+		      \item[-]addRecordToCollection
+		            \\parameters: Document record - a record to add to the collection
+		            \\String collection - name of the collection it should be added to.
+		            \\returns: void
+		            \\Takes a bson Document containing a record and uses the mongoAPI to insert it into the database.
 
 		      \item[-]addRecordsToCollection
-		            \\parameters: String Array of records to be added to a collection
+		            \\parameters: Array of records - the records to be added to a collection
 		            \\String name of the collection it should be added to.
 		            \\returns: void
 		            \\for each oneof the members of the array call addRecordToCollection
+		      \item[-]addRecordsToCollection
+		            \\parameters: ArrayList of Documents - the records to be added to a collection
+		            \\String name of the collection it should be added to.
+		            \\returns: void
+		            \\for each oneof the members of the array call addRecordToCollection
+
+
 
 		      \item[-]ProcessCollection
 		            \\parameters: String, name of a collection
@@ -563,6 +607,20 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\String, key of the parameter used for filtering
 		            \\String start and end ranges for the filtering
 		            \\returns: number of elements matching the range as int
+
+		      \item[-]getRecordsInRange
+		            \\parameters: String, name of the collection to query
+		            \\Object, key of the parameter used for filtering
+		            \\Object start and end ranges for the filtering
+		            \\returns: String array containing all entries of the collection within that range
+		            \\this Method is very general to allow for flexibility.For example by letting the key be, SourceIPaddresses, or a timeStamp.
+
+		      \item[-]getRecordsInRangeSize
+		            \\parameters: String, name of the collection to query
+		            \\Object, key of the parameter used for filtering
+		            \\Object start and end ranges for the filtering
+		            \\returns: number of elements matching the range as int
+
 		      \item[-]getAvailableCollections
 		            \\parameters: -
 		            \\returns: String array with collection names
@@ -570,6 +628,8 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 
 
 	      \end{itemize}
+
+\newpage
 
 	\item[•]Record
 	      \\Every message that comes from kafka and needs to be added to the database has its own Record class that inherit from this one.
@@ -587,15 +647,10 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\This function checks for every variable, gets its name and value as a string and adds it to the document that it eventually returns.
 	      \end{itemize}
 
-	\item[•]PacketRecord
+	\item[•]PacketRecordDesFromKafka
 	      \\Inheriting from Record, this class contains the variables that match the json string obtained from kafka.
 	      \\Attributes
 	      \begin{itemize}
-		      \item[-] id
-		            \\type: String
-		            \\this id is used for determining the ordering when saving to mongoDB, it's the offset of the message in the kafka messaging queue. inherited from Record
-		      \item[-] client
-		            \\type: String
 		      \item[-] L2Protocol
 		            \\type: String
 		      \item[-] SourceMACAddress
@@ -611,7 +666,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		      \item[-] DestinationIPAddress
 		            \\type: String
 		      \item[-] Timestamp
-		            \\type: String
+		            \\type: Timestamp
 		      \item[-] DestinationPort
 		            \\type: String
 		      \item[-] SourcePort
@@ -623,11 +678,57 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 
 	      Methods
 	      \begin{itemize}
+		      \item[-]constructor
+		            \\parameters: initializers for all attributes
+ 
+
 		      \item[-]getters / setters
 		            \\parameters: variable
 		            \\returns: variable type
 		            \\Each variable has its getters and setter methods.
 	      \end{itemize}
+
+	\item[•]PacketRecordDesFromMongo
+	      \\Inheriting from Record, this class contains the variables that match the json string obtained from kafka.
+	      \\Attributes
+	      \begin{itemize}
+		      \item[-] L2Protocol
+		            \\type: String
+		      \item[-] SourceMACAddress
+		            \\type: String
+		      \item[-] L3Protocol
+		            \\type: String
+		      \item[-] L4Protocol
+		            \\type: String
+		      \item[-] SourceIPAddress
+		            \\type: String
+		      \item[-] PacketSummary
+		            \\type: String
+		      \item[-] DestinationIPAddress
+		            \\type: String
+		      \item[-] Timestamp
+		            \\type: Date
+		      \item[-] DestinationPort
+		            \\type: String
+		      \item[-] SourcePort
+		            \\type: String
+		      \item[-] DestinationMACAddress
+		            \\type: String
+
+	      \end{itemize}
+
+	      Methods
+	      \begin{itemize}
+		      \item[-]constructor
+		            \\parameters: initializers for all attributes
+ 
+
+		      \item[-]getters / setters
+		            \\parameters: variable
+		            \\returns: variable type
+		            \\Each variable has its getters and setter methods.
+	      \end{itemize}
+
 
 	\item[•]AlarmRecord
 	      \\Inheriting from Record, this class contains the variables that match the json string obtained from kafka.
@@ -752,12 +853,52 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\parameters: Records array of the records to be processed
 	      \end{itemize}
 
+
+
+	\item[•] AddressesAndLinks
+	      \\Implements IAggregator. This aggregator produces a document containing a list of network nodes that show up in a collection and a list of connections between the nodes.
+Of importance is that nodes are unique while links do not have to be.
+\begin{verbatim}
+		  Name of collection: collectionName\_AddressesAndLinks
+		  structure of record as json:
+		{
+		 "_id ": 0
+		"nodes"  :  [  
+				{"id" : "MAC / IP / Port " , "type" : "L2/3/4" , "Protocol" : "Profinet/ Ethernet etc."}
+				{"id" : "MAC / IP / Port " , "type" : "L2/3/4" , "Protocol" : "Profinet/ Ethernet etc."}
+				...
+				]
+		"links" : [ 
+			{"source" : "MAC / IP / Port " , "target" : "MAC / IP / Port "}
+			{"source" : "MAC / IP / Port " , "target" : "MAC / IP / Port "}
+			....
+			]
+		}
+\end{verbatim}
+
+	      Methods
+	      \begin{itemize}
+		      \item[-]processData
+		            \\parameters: ArrayList records - the records to be processed
+			    \\returns: ArrayList<Document>
+	      \end{itemize}
+
+
+	\item[•] LoginFailureException
+	      \\Exceptions of this class are thrown by MongoClientMediator and MongoClientConsumer when login into the mongo database was not possible; usually due to invalid username or password.
+	      Methods
+	      \begin{itemize}
+		      \item[-]constructor
+		            \\parameters: String errorMessage - the error message to be reported
+	      \end{itemize}
+
+
 	      \begin{figure}[h!]
 		      \includegraphics[max size={\textwidth}{\textheight}]{images/class_back-end_hub.png}
 		      \caption{The classes involved in the communication between the server and the client}
 		      \label{fig:class_back_end_hub}
 	      \end{figure}
-\clearpage
+	      \clearpage
 	\item[•]Hub
 	      \\
 	      This class implements the network handlers for the WebSocket connection to the client. It also has wrapper methods that delegate the database commands to the appropriate IUserSession object.
@@ -799,6 +940,25 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            \\returns: IUserSession
 		            \\Delegate to the IUserSession method to instantiate a new UserSession and log in into the database using the given credentials.
 
+		      \item[-]login
+		            \\parameters: Session session - the current session
+		            \\String username - the user to log in
+		            \\String password - the user's password
+		            \\returns: String
+		            \\If the username and password are valid, create a new database user session with the user logged in and return a authentication token.
+			      If the login fails, return an empty string.
+				
+		      \item[-]authenticate
+		            \\parameters: Session session - the current session
+		            \\String token - the authentication token to use
+		            \\returns: boolean
+		            \\ Return true if this token corresponds to a valid, currently logged in user session, otherwise return false.
+				
+		      \item[-]logout
+		            \\parameters: Session session - the current session
+		            \\returns: void
+		            \\End the current session and log the user out.
+				
 		      \item[-]getAvailableCollections
 		            \\parameters: Session session - the current session
 		            \\returns: String array with collection names
@@ -806,7 +966,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 
 		      \item[-]getCollection
 		            \\parameters: Session session - the current session
-		            \\String - name of a collection
+		            \\String collection - name of a collection
 		            \\returns: String array containing all entries of the collection
 
 		      \item[-]getStartRecord
@@ -846,7 +1006,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 		            key is within the range [start, end).
 	      \end{itemize}
 
-	\newpage
+	      \newpage
 	\item[•]IUserSession
 	      \\An IUserSession object encapsulates a data base session.
 	      On instantiation an IUserSession connects to a database using
@@ -904,7 +1064,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 	      \end{itemize}
 
 
-	\newpage
+	      \newpage
 	\item[•]MongoDBUserSession
 	      \\Encapsulates a user session for a connection to a MongoDB database.
 	      \\Attributes
@@ -1069,6 +1229,38 @@ The admin role , created by default, can create and destroy users as well as ass
 	\caption{User Management workflow}
 	\label{fig:act_UAC}
 \end{figure}
+
 \clearpage
+\subsection{Changes}
+Changes made between version 1.1.0 and version 2.0.0 of this document.
+\subsubsection{Changes to the front-end}
+\begin{itemize}
+\item{Update the login screen: add input field for server url.}
+\end{itemize}
+
+\subsubsection{Changes to the client-server protocol}
+The protocol responses have been made more expressive in general.
+\begin{itemize}
+	\item{Rename "LOGIN\_TOKEN" request to "AUTH".}
+	\item{Rename "LIST\_COL" response to "LIST\_COLL".}
+	\item{Expand "session" response with the specifier key "par"}
+	\item{Expand "data set" and "collection size" responses with the key "key"}
+	\item{Expand "data set" and "collection size" responses with the keys "start" and "end", if they were in the request}
+	\item{"data set" and "collection size" responses will now echo back any key-value pairs not specified in the protocol}
+	\item{getStartRecord, getEndRecord, and the "single data point" response were added.}
+	      item{getEndpoints and the "data endpoints" response were added.}
+\end{itemize}
+
+\subsubsection{Changes to the back-end}
+\begin{itemize}
+\item{Added new aggregator class AddressesAndLinks}
+\item{Added class LoginFailureException}
+\item{Rename class PacketRecord to PacketRecordDesFromKafka, changed the type of timestamp}
+\item{Added class PacketRecordDesFromMongo}
+\item{MongoClientMediator: added variants of methods addRecordToCollection() and addRecordsToCollection() to handle Records and bson Documents.}
+\item{MongoClientMediator: added new method getTopicsForProcessing().}
+\item{Hub: methods login(), authenticate() and logout() were added.}
+\end{itemize}
+
 
 \end{document}
