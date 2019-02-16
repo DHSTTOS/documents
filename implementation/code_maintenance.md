@@ -8,5 +8,5 @@ This should produce the file target/adininspector-backend-0.0.1-SNAPSHOT-jar-wit
 
 ## Front-end
 
-see frontend/README.md
+see [frontend/README.md](https://github.com/DHSTTOS/implementation/blob/master/frontend/README.md)
 
