@@ -38,18 +38,38 @@ node-11.9.0
 
 ## Configuration of the backend server
 ### Kafka
+
 ### MongoDB
+
 ### Apache Tomcat
-#### tomcat configuration
+#### Installing Tomcat
+see e.g.
+ https://www.digitalocean.com/community/tutorials/install-tomcat-9-ubuntu-1804
+
+#### Configuring Tomcat
 May vary depending on the specific underlying OS.
 On digital ocean's droplet hooking tomcat up to the systemd demon resulted in the server aborting and restarting in a loop; starting tomcat manually (with "catalina.sh start" as tomcat user) did work.
-\\
-Note: Tomcat needs random numbers on start (reads /dev/random or so) for ssl stuff; if the server it's running on is low on entropy (e.g. because it sees little network traffic and other activity) this can cause a delay before Tomcat actually starts to handle network requests, of up to 3 minutes.
+
+Note: There can be a possibly long delay (10+ minutes) between starting Tomcat and it actually starting to respond to network access. The reason is that Tomcat needs random numbers on start (reads /dev/random or so) for ssl stuff; if the server it is running on is low on entropy (e.g. because it sees little network traffic and other activity) then it will take time to collect enough entropy.
+Workaround: Generate network traffic, e.g. log in via ssh and run "ls -lR /". This should reduce the delay to less than one minute.
 
 
-#### the webapps/adininspector content
-- copy the .jar (also the gson.jar?) to webapps/adininspector/WEB-INF/libs/
-- optional, for testing: copy and make readable the websockclient2.html file.
+#### Installing the webapps/adininspector content
+(In the following, all paths are relative to Tomcat's base director, e.g. /opt/tomcat/ .)
+
+- copy the .jar (also the gson.jar?) to webapps/adininspector/WEB-INF/lib/
+- optional, for testing: copy websockclient2.html to webapps/adininspector/
+
+#### Starting the Apache Tomcat Webserver
+    sudo -u tomcat bash
+    cd /opt/tomcat
+    ./bin/catalina.sh start
+
+check the main log file, ./logs/catalina.out , for a line like this:
+18-Feb-2019 19:50:36.430 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [81,226] milliseconds
+
+    ./bin/catalina.sh stop
+
 
 ### Firewall
 If a firewall is installed, open the following ports for incoming connections:
