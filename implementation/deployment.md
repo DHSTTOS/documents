@@ -65,7 +65,7 @@ Workaround: Generate network traffic, e.g. log in via ssh and run "ls -lR /". Th
     cd /opt/tomcat
     ./bin/catalina.sh start
 
-check the main log file, ./logs/catalina.out , for a line like this:
+check the main log file, ./logs/catalina.out , for a line like this:  
     18-Feb-2019 19:50:36.430 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [81,226] milliseconds
 
 to stop the tomcat server:
