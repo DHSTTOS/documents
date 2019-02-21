@@ -4,27 +4,27 @@
 (With frontend and backend on the same server)
 Ubuntu 18.04.1 LTS
 
-default-jdk 2:1.10-63ubuntu1~02 amd64
-default-jdk-headless 2:1.10-63ubuntu1~02 amd64
-openjdk-11-jdk:amd64 10.0.2+13-1ubuntu0.18.04.4 amd64
-openjdk-11-jdk-headless:amd64     10.0.2+13-1ubuntu0.18.04.4 amd64
-openjdk-11-jre:amd64 10.0.2+13-1ubuntu0.18.04.4 amd64
-openjdk-11-jre-headless:amd64 10.0.2+13-1ubuntu0.18.04.4 amd64
-
-kafka_2.12-2.1.0 
-zookeeper 3.4.10-3--1
-
-mongodb-org 4.0.5 amd64
-mongodb-org-mongos 4.0.5 amd64
-mongodb-org-server 4.0.5 amd64
-mongodb-org-shell 4.0.5 amd64
-mongodb-org-tools 4.0.5 amd64
-
-XXX tomcat
-
-nodejs 8.10.0~dfsg-2ubuntu0.4 amd64
-
-
+default-jdk 2:1.10-63ubuntu1~02 amd64  
+default-jdk-headless 2:1.10-63ubuntu1~02 amd64  
+openjdk-11-jdk:amd64 10.0.2+13-1ubuntu0.18.04.4 amd64  
+openjdk-11-jdk-headless:amd64     10.0.2+13-1ubuntu0.18.04.4 amd64  
+openjdk-11-jre:amd64 10.0.2+13-1ubuntu0.18.04.4 amd64  
+openjdk-11-jre-headless:amd64 10.0.2+13-1ubuntu0.18.04.4 amd64  
+  
+kafka_2.12-2.1.0   
+zookeeper 3.4.10-3--1  
+  
+mongodb-org 4.0.5 amd64  
+mongodb-org-mongos 4.0.5 amd64  
+mongodb-org-server 4.0.5 amd64  
+mongodb-org-shell 4.0.5 amd64  
+mongodb-org-tools 4.0.5 amd64  
+  
+XXX tomcat  
+  
+nodejs 8.10.0~dfsg-2ubuntu0.4 amd64  
+  
+  
 ### Alternative software environment:
 (With frontend and backend on the same server)
 FreeBSD 13.0-CURRENT
@@ -41,7 +41,7 @@ node-11.9.0
 
 ### MongoDB
 
-### Apache Tomcat
+### Apache Tomcat server
 #### Installing Tomcat
 see e.g.
  https://www.digitalocean.com/community/tutorials/install-tomcat-9-ubuntu-1804
@@ -60,7 +60,7 @@ Workaround: Generate network traffic, e.g. log in via ssh and run "ls -lR /". Th
 - copy the .jar (also the gson.jar?) to webapps/adininspector/WEB-INF/lib/
 - optional, for testing: copy websockclient2.html to webapps/adininspector/
 
-#### Starting the Apache Tomcat Webserver
+#### Starting the Apache Tomcat server
     sudo -u tomcat bash
     cd /opt/tomcat
     ./bin/catalina.sh start
@@ -68,6 +68,7 @@ Workaround: Generate network traffic, e.g. log in via ssh and run "ls -lR /". Th
 check the main log file, ./logs/catalina.out , for a line like this:
 18-Feb-2019 19:50:36.430 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [81,226] milliseconds
 
+to stop the tomcat server:
     ./bin/catalina.sh stop
 
 
@@ -79,10 +80,8 @@ If a firewall is installed, open the following ports for incoming connections:
 
 ## Configuration of the frontend server
 ### Webserver
-\begin{itemize}
-\item{install and configure the webserver}
-\item{set up the directory with the web pages and javascript stuff}
-\end{itemize}
+- install and configure the webserver
+- set up the directory with the web pages and javascript stuff
 
 ### Firewall
 If a firewall is installed, open the following ports for incoming connections:
