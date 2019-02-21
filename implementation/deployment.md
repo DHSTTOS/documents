@@ -26,14 +26,14 @@ nodejs 8.10.0~dfsg-2ubuntu0.4 amd64
   
   
 ### Alternative software environment:
-(With frontend and backend on the same server)
-FreeBSD 13.0-CURRENT
-openjdk8-8.192.26
-kafka-2.1.0
-zookeeper-3.4.12
-mongodb36-3.6.6_2
-tomcat9-9.0.13
-node-11.9.0
+(With frontend and backend on the same server)  
+FreeBSD 13.0-CURRENT  
+openjdk8-8.192.26  
+kafka-2.1.0  
+zookeeper-3.4.12  
+mongodb36-3.6.6_2  
+tomcat9-9.0.13  
+node-11.9.0  
 
 
 ## Configuration of the backend server
@@ -66,7 +66,7 @@ Workaround: Generate network traffic, e.g. log in via ssh and run "ls -lR /". Th
     ./bin/catalina.sh start
 
 check the main log file, ./logs/catalina.out , for a line like this:
-18-Feb-2019 19:50:36.430 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [81,226] milliseconds
+    18-Feb-2019 19:50:36.430 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [81,226] milliseconds
 
 to stop the tomcat server:
     ./bin/catalina.sh stop
