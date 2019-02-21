@@ -4,8 +4,8 @@
 (With frontend and backend on the same server)
 Ubuntu 18.04.1 LTS
 
-default-jdk 2:1.10-63ubuntu1~02 amd64  
-default-jdk-headless 2:1.10-63ubuntu1~02 amd64  
+default-jdk 2:1.10-63ubuntu1\~02 amd64  
+default-jdk-headless 2:1.10-63ubuntu1\~02 amd64  
 openjdk-11-jdk:amd64 10.0.2+13-1ubuntu0.18.04.4 amd64  
 openjdk-11-jdk-headless:amd64     10.0.2+13-1ubuntu0.18.04.4 amd64  
 openjdk-11-jre:amd64 10.0.2+13-1ubuntu0.18.04.4 amd64  
