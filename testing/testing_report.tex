@@ -174,6 +174,130 @@ See discussions under GitHub issue \href{https://github.com/DHSTTOS/implementati
             }
 \end{itemize}
 
+\subsubsection{Realtime data being persistent}
+
+When listening for Realtime data there was not limit to how much of a buffer of previous sessions.
+
+\begin{itemize}
+      \item{Symptom
+            \\
+            Closing and restarting the program at a latter time would keep the real-time collection when the two distinct times should not be concatenated together on the same collection.
+	}
+      \item{Solution
+            \\
+            When the program first starts, discard all real-time date pertaining to other sessions and creating a buffer from there.
+            }
+\end{itemize}
+
+
+\subsubsection{Realtime data buffer keeps growing}
+
+when listening for Realtime data there was not limit to how much of a buffer of the past 
+
+\begin{itemize}
+      \item{Symptom
+            \\
+            Once we started listening to real-time there was no limit to how big the buffer grew. As it grew queries become slower and more unnecessary data was stored.
+	}
+      \item{Solution
+            \\
+            Limit the size of the real-time collection to 60K entries. Roughly 10 minutes of buffer at 100 entries per second.
+            }
+\end{itemize}
+
+\subsubsection{Real-time  aggregated collections not being updated}
+
+Real-time aggregations were not being updated since the java API does not overwrite entries on Mongo by default.
+
+\begin{itemize}
+      \item{Symptom
+            \\
+            Real-time aggregated collections are not updated.
+	}
+      \item{Solution
+            \\
+            Iterate over all aggregated collections and delete them on start alongside the real-time collection.
+            }
+\end{itemize}
+
+\subsubsection{Real-time  aggregated collections not visible from front end}
+
+\begin{itemize}
+      \item{Symptom
+            \\
+            Real-time collections and aggregations do not show on the front-end. Since they do not exist if the program is not listening to the real-time Kafka topic.
+	}
+      \item{Solution
+            \\
+            On start, if not existing, create empty collections for real-time and it's aggregations to expose them to the front end.
+            }
+\end{itemize}
+
+\subsubsection{Getting collections records between a range}
+
+
+
+\begin{itemize}
+      \item{Symptom
+            \\
+            The range was inclusive at the start and inclusive at the end when it should be inclusive at start and exclusive at the end.
+	}
+      \item{Solution
+            \\
+            Changing the query to Mongo from `less or equal than' to `less than'.
+            }
+\end{itemize}
+
+\subsubsection{Getting collections records between a range when using \_id }
+
+\begin{itemize}
+      \item{Symptom
+            \\
+            The \_id corresponds to the index of the collection. Getting for example the records from 0 as start to end 10 does not return records 0-9
+	}
+      \item{Solution
+            \\
+            Changed \_id from a String to a long in the collection to allow for numerical comparisons.
+            }
+\end{itemize}
+
+
+
+\subsubsection{collections are too large to effectively draw the node link diagram}
+
+with really big datasets it's problematic to iterate over the whole thing to draw the diagram.
+
+\begin{itemize}
+      \item{Symptom
+            \\
+            Hang ups and freezes until the diagram is drawn and continuous freezes on redraws.
+	}
+      \item{Solution
+            \\
+            Created a new aggregation containing the information needed to draw the diagram including all connections over a data set as well as the ability to create subsets spanning a set range.
+            }
+\end{itemize}
+
+\subsubsection{Handling of dates from Kafka and Mongo}
+
+When converting an entry from Kafka to json containing a date the value it is converted to {\$date : long} but bson doesn't automatically convert this to a Date Java object.
+
+\begin{itemize}
+      \item{Symptom
+            \\
+            Automatic failure of the bson parsing routine
+	}
+      \item{Solution
+            \\
+            Several revisions of this.
+            \\
+            First fix was ignoring the \$date object altogether and create a mock Timestamp class holding the real value. while this fixes the issue it introduces another one where getting an entry from the MongoDB and using bson to convert it into a Java object does not work since the conversion does not hold this mock Timestamp class.\\
+            Second fix was writing a deserialization routine and creating a two classes, one containing the mock object and one without it. Fixes the issue but under testing it was found unreliable and requiring way too big of an overhead.\\
+            Final fix: Create a proper deserialization routine converting the portion of the record containing the date into it's own json object and extracting the value of \$date as key fixes the issue when converting from Kafka. Converting from Mongo skips the routine and works as intended
+            }
+\end{itemize}
+
+
 \subsubsection{Filter and grouping features not working}
 
 See discussions under GitHub issue \href{https://github.com/DHSTTOS/implementation/issues/86}{\color{blue}{\#86}}, \href{https://github.com/DHSTTOS/implementation/issues/86}{\color{blue}{\#74}} and pull request \href{https://github.com/DHSTTOS/implementation/issues/101}{\color{blue}{\#101}}.
@@ -188,6 +312,7 @@ See discussions under GitHub issue \href{https://github.com/DHSTTOS/implementati
             Completed the feature.
             }
 \end{itemize}
+
 
 \subsection{Remaining Issues}
 \begin{itemize}
@@ -208,3 +333,6 @@ See discussions under GitHub issue \href{https://github.com/DHSTTOS/implementati
 
 
 \end{document}
+
+
+
