@@ -1,0 +1,14 @@
+\subsubsection{${title}}
+
+${exp}
+
+\begin{itemize}
+      \item{Symptom
+            \\
+            ${symp}
+	}
+      \item{Solution
+            \\
+            ${sol}
+            }
+\end{itemize}
