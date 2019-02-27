@@ -189,10 +189,13 @@ See discussions under GitHub issue \href{https://github.com/DHSTTOS/implementati
             }
 \end{itemize}
 
+\newpage
+
 \subsection{Remaining Issues}
 \begin{itemize}
       \item{Handle logged-out state better}
       
+\end{itemize}
       
       %% Some of the changes we made were :
       %% 1. Changed the layout of the node-link diagram to an ellipsoid shape for better visability
@@ -204,30 +207,102 @@ See discussions under GitHub issue \href{https://github.com/DHSTTOS/implementati
       %%
       %%This are the changes that were made since the implementation phase.
 
+
+\newpage
+
+\subsection{Small bug fixes}
+
+This section lists small bugs which were found and fixed in the testing phase that were not recorded as GitHub issues.
+\\
+
+
+\subsubsection{Fix ConcurrentModifiedException in logout().}
+
+Insufficient knowledge of API: it is not safe to remove an element directly from a hashmap, while iterating over the map.
+
+\begin{itemize}
+      \item{Symptom
+            \\
+            ConcurrentModificationException was thrown.
+	}
+      \item{Solution
+            \\
+            Delete the element (a terminated user session) with the iterator's remove() method.
+            }
 \end{itemize}
 
-    Fix concurrentException in logout().
 
-        Fix footer checkbox
-	    Adjust container width, remove pink background, adjust brush height.
+\subsubsection{In MongoDBUserSession, catch MongoSocketOpenException.}
 
-	        Update tickmarks when brushing.
-   fix: getCollectionGroup takes collection name as parameter.
+A timeout during login, e.g. because the MongoDB server was not running, caused an exception that was not caught and handled.
 
-    Fix: client sessions clobbering each other: move initialization of the static maps to a static block.
-
-        Add getRecord (GET\_RECORD) to fetch exactly matching records.
-
-
-	    Add getCollectionGroupEndpoints() and DATAGROUP_ENDPOINTS. This fetchâ~@#
-
-	        In Hub, catch and rethrow all exceptions occuring during login.
-    In MongoDBUserSession catch MongoSocketOpenException (e.g. for timeout due t
+\begin{itemize}
+      \item{Symptom
+            \\
+            The Hub crashed when MongoDB was not running.
+	}
+      \item{Solution
+            \\
+            Catch and handle MongoSocketOpenException and rethrow it as LoginFailureException.
+            }
+\end{itemize}
 
 
+\subsubsection{Update ticklabels when brushing.}
 
+The array index calculation to get the values for the ticklabels was wrong.
 
+\begin{itemize}
+      \item{Symptom
+            \\
+            The moveable axis had no ticklabels.
+	}
+      \item{Solution
+            \\
+            Fix the calculation of the index offset.
+            }
+\end{itemize}
+\subsubsection{getCollectionGroup() needs collection name as parameter.}
 
+Forgot to add a parameter for the collection to be used to function getCollectionGroup(); instead it used a default value.
 
+\begin{itemize}
+      \item{Symptom
+            \\
+            Data from a wrong collection was returned.
+	}
+      \item{Solution
+            \\
+            Add name parameter.
+            }
+\end{itemize}
+\subsubsection{Fix client sessions clobbering each other.}
+
+The java websocket implementation instantiates a new Hub object for each websocket connection that gets opened (started) by a client. Since the Hub classes constructor initialized the list of sessions, this would remove all currently existing sessions.
+
+\begin{itemize}
+      \item{Symptom
+            \\
+            When a client connected to the server, all current sessions of other clients were aborted.
+	}
+      \item{Solution
+            \\
+            Move the initialization code for the sessions map from the constructor to a static block.
+            }
+\end{itemize}
+\subsubsection{Fix brush container layout.}
+
+The width of the React container for the brush and the height of the brush's area were wrong.
+
+\begin{itemize}
+      \item{Symptom
+            \\
+            The "add new diagram" button was pushed too far to the right and the brush's axis was too close to the container's border.
+	}
+      \item{Solution
+            \\
+            Reduce the container width and increase the axis' vertical offset.
+            }
+\end{itemize}
 
 \end{document}
