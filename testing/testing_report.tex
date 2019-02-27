@@ -354,6 +354,65 @@ A timeout during login, e.g. because the MongoDB server was not running, caused 
             }
 \end{itemize}
 
+\subsubsection{getCollectionGroup() needs collection name as parameter.}
+Forgot to add a parameter for the collection to be used to function getCollectionGroup(); instead it used a default value.
+
+\begin{itemize}
+      \item{Symptom
+            \\
+            Data from a wrong collection was returned.
+	}
+      \item{Solution
+            \\
+            Add name parameter.
+            }
+\end{itemize}
+
+\subsubsection{Fix client sessions clobbering each other.}
+
+The java WebSocket implementation instantiates a new Hub object for each WebSocket connection that gets opened (started) by a client. Since the Hub classes constructor initialized the list of sessions, this would remove all currently existing sessions.
+
+\begin{itemize}
+      \item{Symptom
+            \\
+            When a client connected to the server, all current sessions of other clients were aborted.
+	}
+      \item{Solution
+            \\
+            Move the initialization code for the sessions map from the constructor to a static block.
+            }
+\end{itemize}
+
+\subsubsection{Wrong handling of the data structure of a message in wsutils.}
+
+The data received from the server was unpacked incorrectly in handleDataGroup(); instead of a map-of-maps it is a map of JSON-strings.
+
+\begin{itemize}
+      \item{Symptom
+            \\
+            The diagram drawing routines threw an exception on accessing the extracted data and displayed a blank screen.
+	}
+      \item{Solution
+            \\
+            Fix access to the data structure by parsing the JSON strings.
+            }
+\end{itemize}
+
+\subsubsection{Fix brush container layout.}
+
+The width of the React container for the brush and the height of the brush's area were wrong.
+
+\begin{itemize}
+      \item{Symptom
+            \\
+            The "add new diagram" button was pushed too far to the right and the brush's axis was too close to the container's border.
+	}
+      \item{Solution
+            \\
+            Reduce the container width and increase the axis' vertical offset.
+            }
+\end{itemize}
+
 
 \subsubsection{Update tick labels when brushing.}
 
@@ -369,48 +428,22 @@ The array index calculation to get the values for the tick labels was wrong.
             Fix the calculation of the index offset.
             }
 \end{itemize}
-\subsubsection{getCollectionGroup() needs collection name as parameter.}
 
-Forgot to add a parameter for the collection to be used to function getCollectionGroup(); instead it used a default value.
+\subsubsection{Data selection with the brush for the node-link diagram}
 
-\begin{itemize}
-      \item{Symptom
-            \\
-            Data from a wrong collection was returned.
-	}
-      \item{Solution
-            \\
-            Add name parameter.
-            }
-\end{itemize}
-\subsubsection{Fix client sessions clobbering each other.}
-
-The java WebSocket implementation instantiates a new Hub object for each WebSocket connection that gets opened (started) by a client. Since the Hub classes constructor initialized the list of sessions, this would remove all currently existing sessions.
+The node link diagram uses data preprocessed by the server. Therefore brushing and zooming can't be done by the client by simply extracting sections of the data set.
 
 \begin{itemize}
       \item{Symptom
             \\
-            When a client connected to the server, all current sessions of other clients were aborted.
+            The node link diagram didn't react to the brush or went blank.
 	}
       \item{Solution
             \\
-            Move the initialization code for the sessions map from the constructor to a static block.
+            Request node-link data for the currently selected time range from the server.
             }
 \end{itemize}
-\subsubsection{Fix brush container layout.}
 
-The width of the React container for the brush and the height of the brush's area were wrong.
-
-\begin{itemize}
-      \item{Symptom
-            \\
-            The "add new diagram" button was pushed too far to the right and the brush's axis was too close to the container's border.
-	}
-      \item{Solution
-            \\
-            Reduce the container width and increase the axis' vertical offset.
-            }
-\end{itemize}
 
 
 \newpage
