@@ -415,6 +415,25 @@ The width of the React container for the brush and the height of the brush's are
 
 \newpage
 
+\subsection{Test cases}
+\begin{tabular}{l|l}
+	T100 Successful login & pass \\
+	T101 Failed login & fail (password check is disabled to facilitate other tests) \\
+	T200 Open second diagram & pass \\
+	T210 Open multiple diagrams & pass \\
+	T220 Configure a diagram & pass in changed form \\
+	T300 Filtering & pass \\
+	T310 Filtering chaining & N/A, dropped requirement \\
+	T400 Full screen a diagram & pass \\
+	T450 Exit full screen & pass \\
+	T500 Play button & N/A, dropped requirement \\
+	T510 Time window & N/A, dropped requirement \\
+	T600 Investigate a data point & pass \\
+	T610 Investigate nodes and links & pass \\
+	T620 Select data points & fail \\
+	T630 Create diagram from selection & fail \\
+\end {tabular}
+
 \subsection{Remaining Issues}
 \begin{itemize}
       \item{Handle logged-out state better}
