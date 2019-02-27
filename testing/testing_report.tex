@@ -155,7 +155,7 @@ Also see GitHub issue \href{https://github.com/DHSTTOS/implementation/issues/69}
 
       \item{Solution
             \\
-            The reason was that hidden deep inside the update() function of the nodelink diagram, there were some "functions" that mutate the passed in parameters themselves, adding in D3 positioning info and modifying other stuff - so in our case it's the data object inside dataStore gets mutated and it becomes useless when it gets passed inside myNetwork.updateData(), which is why it all chokes when MobX runs myNetwork.updateData() later on.
+            The reason was that hidden deep inside the update() function of the node-link diagram, there were some "functions" that mutate the passed in parameters themselves, adding in D3 positioning info and modifying other stuff - so in our case it's the data object inside dataStore gets mutated and it becomes useless when it gets passed inside myNetwork.updateData(), which is why it all chokes when MobX runs myNetwork.updateData() later on.
             }
 \end{itemize}
 
@@ -288,7 +288,7 @@ Real-time aggregations were not being updated since the java API does not overwr
 
 
 
-\subsubsection{collections are too large to effectively draw the node link diagram}
+\subsubsection{collections are too large to effectively draw the node-link diagram}
 
 with really big data sets it's problematic to iterate over the whole thing to draw the diagram.
 
@@ -431,12 +431,12 @@ The array index calculation to get the values for the tick labels was wrong.
 
 \subsubsection{Data selection with the brush for the node-link diagram}
 
-The node link diagram uses data preprocessed by the server. Therefore brushing and zooming can't be done by the client by simply extracting sections of the data set.
+The node-link diagram uses data preprocessed by the server. Therefore brushing and zooming can't be done by the client by simply extracting sections of the data set.
 
 \begin{itemize}
       \item{Symptom
             \\
-            The node link diagram didn't react to the brush or went blank.
+            The node-link diagram didn't react to the brush or went blank.
 	}
       \item{Solution
             \\
