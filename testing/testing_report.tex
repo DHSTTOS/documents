@@ -174,6 +174,31 @@ See discussions under GitHub issue \href{https://github.com/DHSTTOS/implementati
             }
 \end{itemize}
 
+\subsubsection{Filter and grouping features not working}
+
+See discussions under GitHub issue \href{https://github.com/DHSTTOS/implementation/issues/86}{\color{blue}{\#86}}, \href{https://github.com/DHSTTOS/implementation/issues/86}{\color{blue}{\#74}} and pull request \href{https://github.com/DHSTTOS/implementation/issues/101}{\color{blue}{\#101}}.
+
+\begin{itemize}
+      \item{Symptom
+            \\
+            The filter and grouping features were not working due to an incomplete implementation.}
+
+      \item{Solution
+            \\
+            Completed the feature.
+            }
+\end{itemize}
+
+
+\newpage
+
+\subsection{Bug fixes}
+
+This section lists bugs which were found and fixed in the testing phase that were not recorded as GitHub issues.
+\\
+
+
+
 \subsubsection{Realtime data being persistent}
 
 When listening for Realtime data there was not limit to how much of a buffer of previous sessions.
@@ -298,50 +323,6 @@ When converting an entry from Kafka to json containing a date the value it is co
 \end{itemize}
 
 
-\subsubsection{Filter and grouping features not working}
-
-See discussions under GitHub issue \href{https://github.com/DHSTTOS/implementation/issues/86}{\color{blue}{\#86}}, \href{https://github.com/DHSTTOS/implementation/issues/86}{\color{blue}{\#74}} and pull request \href{https://github.com/DHSTTOS/implementation/issues/101}{\color{blue}{\#101}}.
-
-\begin{itemize}
-      \item{Symptom
-            \\
-            The filter and grouping features were not working due to an incomplete implementation.}
-
-      \item{Solution
-            \\
-            Completed the feature.
-            }
-\end{itemize}
-
-
-\newpage
-
-
-\subsection{Remaining Issues}
-\begin{itemize}
-      \item{Handle logged-out state better}
-      
-\end{itemize}
-      
-      %% Some of the changes we made were :
-      %% 1. Changed the layout of the node-link diagram to an ellipsoid shape for better visability
-      %% 2. Added the legend alongside the diagrams, since it was missing
-      %% 3. Added a mouseover function to the links. Now when a mouse hovers a link , the respective link will get highlighted and we also added som
-      %% tooltip to the link that on mouseover it displays information for the source-node as well as the target-node.
-      %% 4. Seperated the layers by colors as well as seperated different protocols within a layer
-      %%
-      %%
-      %%This are the changes that were made since the implementation phase.
-
-
-\newpage
-
-\subsection{Small bug fixes}
-
-This section lists small bugs which were found and fixed in the testing phase that were not recorded as GitHub issues.
-\\
-
-
 \subsubsection{Fix ConcurrentModifiedException in logout().}
 
 Insufficient knowledge of API: it is not safe to remove an element directly from a hashmap, while iterating over the map.
@@ -431,7 +412,24 @@ The width of the React container for the brush and the height of the brush's are
             }
 \end{itemize}
 
+
+\newpage
+
+\subsection{Remaining Issues}
+\begin{itemize}
+      \item{Handle logged-out state better}
+      
+\end{itemize}
+      
+      %% Some of the changes we made were :
+      %% 1. Changed the layout of the node-link diagram to an ellipsoid shape for better visability
+      %% 2. Added the legend alongside the diagrams, since it was missing
+      %% 3. Added a mouseover function to the links. Now when a mouse hovers a link , the respective link will get highlighted and we also added som
+      %% tooltip to the link that on mouseover it displays information for the source-node as well as the target-node.
+      %% 4. Seperated the layers by colors as well as seperated different protocols within a layer
+      %%
+      %%
+      %%This are the changes that were made since the implementation phase.
+
 \end{document}
-
-
 
