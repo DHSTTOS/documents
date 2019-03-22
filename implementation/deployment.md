@@ -37,9 +37,10 @@ node-11.9.0
 
 
 ## Configuration of the backend server
-### Kafka
 
-### MongoDB
+### Kafka and MongoDB
+Please refer to the README.md for the [Back-end](https://github.com/DHSTTOS/implementation/tree/master/Back-end)
+
 
 ### Apache Tomcat server
 #### Installing Tomcat
