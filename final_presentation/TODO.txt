@@ -7,6 +7,7 @@ one line for ... UDP
 ... profinet
 and only those lines for which the global filters are "on"/true should be shown
 
+
 2) the diagram's legend for the x-axis should not overlap the brush area
 3) fix the legend for the colors (e.g currently it shows "profinet" & "ip"; should be "profinet" & "ether"
 4) ticktexts on the x-axis shouldn't overlap
@@ -15,4 +16,12 @@ and only those lines for which the global filters are "on"/true should be shown
 6) when creating a new diagram, the global filters should be set to a reasonable/usable
 state for that diagram (probably "on" for all)
  
+
+7)Main point: think of a use case/applications and what you would want the data to show
+
+E.g. for the scatterplot chart we'll have to pick properties that make sense and also
+give a "good looking" picture. (e.g. picking source-ip for the x-axis when there is only on
+source ip address in the whole collection gives an uminpressive diagram).
+
+We should find a combination of collection and properties that give both an "understandable" line chart and scatterplot chart.
 
