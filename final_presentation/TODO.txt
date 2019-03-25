@@ -1,0 +1,18 @@
+1)
+the line-chart should show
+one line for number of TCP connections,
+one line for ... UDP
+... IP
+... ether
+... profinet
+and only those lines for which the global filters are "on"/true should be shown
+
+2) the diagram's legend for the x-axis should not overlap the brush area
+3) fix the legend for the colors (e.g currently it shows "profinet" & "ip"; should be "profinet" & "ether"
+4) ticktexts on the x-axis shouldn't overlap
+5) the uppermost ticktext on the y-axis is missing/invisible
+
+6) when creating a new diagram, the global filters should be set to a reasonable/usable
+state for that diagram (probably "on" for all)
+ 
+
