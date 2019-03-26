@@ -1,4 +1,4 @@
-##Script for the program demonstration during the final presentation
+##Script for the screencast of a program demonstration for the final presentation
 
 login screen 10-15 seconds
 on main screen: ca. 45 seconds
