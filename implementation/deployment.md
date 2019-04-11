@@ -75,9 +75,15 @@ to stop the tomcat server:
 
 ### Firewall
 If a firewall is installed, open the following ports for incoming connections:
-- 80, 443 for production
-- 1234, 3000 (optional, for testing with npm-based webserver
-- 8080, 8433 needed in the development environment, not for production
+80 and 443 (for http and https)
+
+Optionally, for testing with a npm-based webserver, you can also open:
+1234 and 3000
+
+Optionally, for the development environment, also open:
+8080 and 8433
+
+
 
 ## Configuration of the frontend server
 ### Webserver
@@ -86,7 +92,11 @@ If a firewall is installed, open the following ports for incoming connections:
 
 ### Firewall
 If a firewall is installed, open the following ports for incoming connections:
-- 80, 443 for production
-- 1234, 3000 (optional, for testing with npm-based webserver)
-- 8080, 8433 needed in the development environment, not for production
+80 and 443 (for http and https)
+
+Optionally, for testing with a npm-based webserver, you can also open:
+1234 and 3000
+
+Optionally, for the development environment, also open:
+8080 and 8433
 
