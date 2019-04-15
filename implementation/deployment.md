@@ -113,12 +113,12 @@ the line
     wsEndpointURL =
      'wss://adininspector.currno.de/adininspector/adinhubsoc2';
 
-and in login-frontend/src/components/stores/app.js
+and in login-frontend/src/components/UserForm.js
 the line
-   webSocketUrl = "wss://adininspector.currno.de/adininspector/adinhubsoc2";
+   placeholder="wss://adininspector.currno.de/adininspector/adinhubsoc2"
 
 
-(the path '/adininspector/adinhubsoc2' should stay unchangd.)
+(the path '/adininspector/adinhubsoc2' should stay unchanged.)
 
 
 If you are using the http protocol (i.e. if you haven't set up a ssl certificate) you also have to replace "wss:" with "ws:" in those two lines.
