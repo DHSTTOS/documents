@@ -87,8 +87,6 @@ Tomcat will still run without such a certificate, but only http:// connections w
 You can get a certificate from e.g.
 https://letsencrypt.org/getting-started/
 
-- get a certificate (e.g. from)
-- copy it to /etc/letsencrypt
 
 #### Installing the webapps/adininspector content
 
@@ -103,13 +101,13 @@ https://letsencrypt.org/getting-started/
 2)
 - use git to check out
    https://github.com/DHSTTOS/implementation/
-   into /opt/tomcat/webapps/implementation
+into /opt/tomcat/webapps/implementation
 Make sure the following two directories exist now:
    /opt/tomcat/webapps/implementation/frontend
    /opt/tomcat/webapps/implementation/login-frontend
 
 3)
-Adjust the following to files to use the correct address for your host:
+Adjust the following two files to use the correct address for your host:
 in frontend/src/stores/user.js
 the line
     wsEndpointURL =
@@ -123,7 +121,7 @@ the line
 (the path '/adininspector/adinhubsoc2' should stay unchangd.)
 
 
-If you are using the http protocol (i.e. if you haven't set up a ssl certificate) you also have to replace the "wss:" with "ws:" in those two lines.
+If you are using the http protocol (i.e. if you haven't set up a ssl certificate) you also have to replace "wss:" with "ws:" in those two lines.
 
 
 4)
