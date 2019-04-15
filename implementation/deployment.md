@@ -1,7 +1,7 @@
 # Deployment/Installation Manual for the ADIN Inspector System
 
 ## Tested software environment:
-(With frontend and backend on the same server)
+(With front-end and back-end on the same server)
 Ubuntu 18.04.1 LTS
 
 default-jdk 2:1.10-63ubuntu1\~02 amd64  
@@ -20,13 +20,13 @@ mongodb-org-server 4.0.5 amd64
 mongodb-org-shell 4.0.5 amd64  
 mongodb-org-tools 4.0.5 amd64  
   
-XXX tomcat  
+tomcat 8
   
 nodejs 8.10.0~dfsg-2ubuntu0.4 amd64  
   
   
 ### Alternative software environment:
-(With frontend and backend on the same server)  
+(With frontend and back-end on the same server)  
 FreeBSD 13.0-CURRENT  
 openjdk8-8.192.26  
 kafka-2.1.0  
@@ -36,10 +36,28 @@ tomcat9-9.0.13
 node-11.9.0  
 
 
-## Configuration of the backend server
+## Configuration of the webserver
+The following setup uses one webserver for both the frontend (the website that the user accesses) and the back-end (the database accessed from the frontend javascript program).
+
+
+### The repository address
+The following repository 
+https://github.com/DHSTTOS/implementation
+contains all source and configuration files for both back-end and front-end.
+
 
 ### Kafka and MongoDB
 Please refer to the README.md for the [Back-end](https://github.com/DHSTTOS/implementation/tree/master/Back-end)
+
+
+### Building the .jar file (the servlet) from the java source
+
+Fetch the repository, then run the following commands:
+
+   cd implementation/Back-end
+   mvn clean compile assembly:single
+
+This will produce the file target/adininspector-backend-0.0.1-SNAPSHOT-jar-with-dependencies.jar and bundle all necessary dependencies with it.
 
 
 ### Apache Tomcat server
@@ -48,26 +66,89 @@ see e.g.
  https://www.digitalocean.com/community/tutorials/install-tomcat-9-ubuntu-1804
 
 #### Configuring Tomcat
-May vary depending on the specific underlying OS.
-On digital ocean's droplet hooking tomcat up to the systemd demon resulted in the server aborting and restarting in a loop; starting tomcat manually (with "catalina.sh start" as tomcat user) did work.
+This may vary depending on the specific underlying OS.
+On digital ocean's droplet hooking tomcat up to the systemd demon resulted in the server aborting and restarting in a loop.
+Starting tomcat manually instead works.
 
-Note: There can be a possibly long delay (10+ minutes) between starting Tomcat and it actually starting to respond to network access. The reason is that Tomcat needs random numbers on start (reads /dev/random or so) for ssl stuff; if the server it is running on is low on entropy (e.g. because it sees little network traffic and other activity) then it will take time to collect enough entropy.
-Workaround: Generate network traffic, e.g. log in via ssh and run "ls -lR /". This should reduce the delay to less than one minute.
 
+Change to the tomcat base directory (when following the tutorial above from digitalocean, this will be /opt/tomcat).
+   cd conf
+   # edit the file catalina.properties to append the following line:
+   java.security.egd=file:/dev/./urandom
+
+
+Copy the file Back-end/tomcat-conf/server.xml
+to /opt/tomcat/conf/server.xml
+
+This file is set up to make use of a certificate in /etc/letsencrypt/ to enable https connections, i.e. SSL encryption.
+Tomcat will still run without such a certificate, but only http:// connections will be available.
+
+
+You can get a certificate from e.g.
+https://letsencrypt.org/getting-started/
+
+- get a certificate (e.g. from)
+- copy it to /etc/letsencrypt
 
 #### Installing the webapps/adininspector content
-(In the following, all paths are relative to Tomcat's base director, e.g. /opt/tomcat/ .)
 
-- copy the .jar (also the gson.jar?) to webapps/adininspector/WEB-INF/lib/
+1)
+- copy adininspector-backend-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+  from implementation/Back-end/target/
+  to /opt/tomcat/webapps/adininspector/WEB-INF/lib/
+
 - optional, for testing: copy websockclient2.html to webapps/adininspector/
+  (this is a tool for low-level testing of the websocket connection to the server and the database access)
+
+2)
+- use git to check out
+   https://github.com/DHSTTOS/implementation/
+   into /opt/tomcat/webapps/implementation
+Make sure the following two directories exist now:
+   /opt/tomcat/webapps/implementation/frontend
+   /opt/tomcat/webapps/implementation/login-frontend
+
+3)
+Adjust the following to files to use the correct address for your host:
+in frontend/src/stores/user.js
+the line
+    wsEndpointURL =
+     'wss://adininspector.currno.de/adininspector/adinhubsoc2';
+
+and in login-frontend/src/components/stores/app.js
+the line
+   webSocketUrl = "wss://adininspector.currno.de/adininspector/adinhubsoc2";
+
+
+(the path '/adininspector/adinhubsoc2' should stay unchangd.)
+
+
+If you are using the http protocol (i.e. if you haven't set up a ssl certificate) you also have to replace the "wss:" with "ws:" in those two lines.
+
+
+4)
+now, as root, run these two scripts:
+   frontend/bin/redeploy-login.sh
+   frontend/bin/redeploy-main-frontend.sh
+
+to transpile (link/compile) the javascript source code.
+
 
 #### Starting the Apache Tomcat server
+If tomcat only uses ports > 1024 (e.g. 8080) you can run it as user tomcat:
     sudo -u tomcat bash
     cd /opt/tomcat
     ./bin/catalina.sh start
 
-check the main log file, ./logs/catalina.out , for a line like this:  
+otherwise (when using the default http and https ports) run it as root:
+    sudo bash
+    cd /opt/tomcat
+    ./bin/catalina.sh start
+
+
+To check if it started successfully, check the main log file, ./logs/catalina.out , for a line like this:  
     18-Feb-2019 19:50:36.430 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [81,226] milliseconds
+
 
 to stop the tomcat server:
     ./bin/catalina.sh stop
@@ -83,20 +164,4 @@ Optionally, for testing with a npm-based webserver, you can also open:
 Optionally, for the development environment, also open:
 8080 and 8433
 
-
-
-## Configuration of the frontend server
-### Webserver
-- install and configure the webserver
-- set up the directory with the web pages and javascript stuff
-
-### Firewall
-If a firewall is installed, open the following ports for incoming connections:
-80 and 443 (for http and https)
-
-Optionally, for testing with a npm-based webserver, you can also open:
-1234 and 3000
-
-Optionally, for the development environment, also open:
-8080 and 8433
 
