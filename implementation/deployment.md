@@ -78,9 +78,9 @@ On digital ocean's droplet hooking tomcat up to the systemd demon resulted in th
 Starting tomcat manually instead works.
 
 
-Change to the tomcat base directory (when following the tutorial above from digitalocean, this will be /opt/tomcat).
+Change to the tomcat base directory (when following the tutorial above from digitalocean, this will be `/opt/tomcat`).
 
-```
+```bash
 cd conf
 # edit the file catalina.properties to append the following line:
 java.security.egd=file:/dev/./urandom
@@ -92,25 +92,24 @@ to `/opt/tomcat/conf/server.xml`
 This file is set up to make use of a certificate in `/etc/letsencrypt/` to enable https connections, i.e. SSL encryption.
 Tomcat will still run without such a certificate, but only `http://` connections will be available.
 
-You can get a certificate from e.g.
-https://letsencrypt.org/getting-started/
+You can get a certificate from e.g. [Let's Encrypt](https://letsencrypt.org/getting-started/).
 
 #### Installing the webapps/adininspector content
 
 **step 1**
 
-- copy adininspector-backend-0.0.1-SNAPSHOT-jar-with-dependencies.jar
-  from implementation/Back-end/target/
-  to /opt/tomcat/webapps/adininspector/WEB-INF/lib/
+- copy `adininspector-backend-0.0.1-SNAPSHOT-jar-with-dependencies.jar`
+  from `implementation/Back-end/target/`
+  to `/opt/tomcat/webapps/adininspector/WEB-INF/lib/`
 
-- optional, for testing: copy websockclient2.html to webapps/adininspector/
+- optional, for testing: copy `websockclient2.html` to `webapps/adininspector/`
   (this is a tool for low-level testing of the websocket connection to the server and the database access)
 
 **step 2**
 
 - use git to check out
    https://github.com/DHSTTOS/implementation/
-into /opt/tomcat/webapps/implementation
+into `/opt/tomcat/webapps/implementation`
 Make sure the following two directories exist now:
 
 ```
@@ -123,14 +122,16 @@ Make sure the following two directories exist now:
 Adjust the following two files to use the correct address for your host:
 in `frontend/src/stores/user.js`
 the line
-```
+
+```js
 wsEndpointURL =
   'wss://adininspector.currno.de/adininspector/adinhubsoc2';
 ```
+
 and in `login-frontend/src/components/UserForm.js`
 the line
 
-```
+```js
 placeholder="wss://adininspector.currno.de/adininspector/adinhubsoc2"
 ```
 
@@ -153,26 +154,28 @@ to build and bundle the javascript source code.
 
 If tomcat only uses ports > 1024 (e.g. 8080) you can run it as user tomcat:
 
-```
+```bash
 sudo -u tomcat bash
 cd /opt/tomcat
 ./bin/catalina.sh start
 ```
 
 otherwise (when using the default http and https ports) run it as root:
-```
+
+```bash
 sudo bash
 cd /opt/tomcat
 ./bin/catalina.sh start
 ```
 
-To check if it started successfully, check the main log file, ./logs/catalina.out , for a line like this:  
+To check if it started successfully, check the main log file, `./logs/catalina.out` , for a line like this:  
 ```
 18-Feb-2019 19:50:36.430 INFO [main] org.apache.catalina.startup.Catalina.start Server startup in [81,226] milliseconds
 ```
 
 to stop the tomcat server:
-```
+
+```bash
 ./bin/catalina.sh stop
 ```
 
