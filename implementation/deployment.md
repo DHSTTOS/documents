@@ -29,12 +29,13 @@ nodejs 10.15.0
 ### Alternative software environment
 
 (With frontend and back-end on the same server)  
-FreeBSD 13.0-CURRENT  
-openjdk8-8.192.26  
-kafka-2.1.0  
-zookeeper-3.4.12  
-mongodb36-3.6.6_2  
-tomcat9-9.0.13  
+
+- FreeBSD 13.0-CURRENT  
+- openjdk8-8.192.26  
+- kafka-2.1.0  
+- zookeeper-3.4.12  
+- mongodb36-3.6.6_2  
+- tomcat9-9.0.13  
 
 You will also need [node.js 10+ (with npm 6+)](https://nodejs.org/en/) to build the frontend modules. Consider using [nvm](https://github.com/creationix/nvm) to manage multiple node installations on your system.
 
@@ -80,9 +81,9 @@ Starting tomcat manually instead works.
 Change to the tomcat base directory (when following the tutorial above from digitalocean, this will be /opt/tomcat).
 
 ```
-   cd conf
-   # edit the file catalina.properties to append the following line:
-   java.security.egd=file:/dev/./urandom
+cd conf
+# edit the file catalina.properties to append the following line:
+java.security.egd=file:/dev/./urandom
 ```
 
 Copy the file `Back-end/tomcat-conf/server.xml`
@@ -91,10 +92,8 @@ to `/opt/tomcat/conf/server.xml`
 This file is set up to make use of a certificate in `/etc/letsencrypt/` to enable https connections, i.e. SSL encryption.
 Tomcat will still run without such a certificate, but only `http://` connections will be available.
 
-
 You can get a certificate from e.g.
 https://letsencrypt.org/getting-started/
-
 
 #### Installing the webapps/adininspector content
 
