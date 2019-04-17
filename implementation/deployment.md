@@ -181,10 +181,9 @@ to stop the tomcat server:
 If a firewall is installed, open the following ports for incoming connections:
 80 and 443 (for http and https)
 
-Optionally, for testing with a npm-based webserver, you can also open:
-1234 and 3000
+Although we recommend against SSH'ing into the server to make changes to the frontend remotely, if you want access the frontend dev servers on the remote server, you will also need to open port `1234` and `3000`.
 
 Optionally, for the development environment, also open:
-8080 and 8433
+8080 and 8433 (for http and https)
 
 
