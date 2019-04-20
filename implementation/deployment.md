@@ -67,6 +67,9 @@ The Mongo service needs to be running and a user account with read/write for all
 A [dump](https://docs.mongodb.com/manual/reference/program/mongodump/) containing all relevant databases and the provided test datasets can be found on this directory under dump/.
 
 To export it you can use the [mongorestore](https://docs.mongodb.com/manual/reference/program/mongorestore/#bin.mongorestore) utility.
+
+Make sure that the mongo service is running, if not run `sudo service mongod start`
+
 i.e. `run mongorestore -u "ADMINUSER" -p "PASS"` on the same directory as the dump/ directory.
 
 2. Kafka 2.1.0
@@ -75,6 +78,15 @@ Installation instructions for Kafka can be found [here](https://kafka.apache.org
 
 The programm needs the Kafka server to be up and the Kafka server needs Zookeper to be started.
 
+Navigate to the kafka installation directory.
+
+start zookeper : 
+
+  `sudo bin/zookeeper-server-start.sh config/zookeeper.properties`
+
+start Kafka : 
+
+  `sudo bin/kafka-server-start.sh config/server.properties`
 
 3. Apache Tomcat server
 
@@ -227,5 +239,18 @@ Although we recommend against SSH'ing into the server to make changes to the fro
 
 Optionally, for the development environment, also open:
 8080 and 8433 (for http and https)
+
+
+## Credits
+
+[Klevia Ulqinaku](https://github.com/klevia) - Login Page UI, Data Visualization
+
+[Philipp Mergenthaler](https://github.com/pm8008) - Client-Server Communication, Data Visualization
+
+[Xiaoru Li](https://github.com/hexrcs) - Original UI design, Main Page UI, Data Visualization, Client-Server Communication, Project Logo Design
+
+[Mario Gonzalez](https://github.com/mgonzalez01) - Database Management storage, provision and communication with Kafka
+
+[Philipp Mergenthaler](https://github.com/pm8008) - Client-Server Communication, Data Visualization
 
 
