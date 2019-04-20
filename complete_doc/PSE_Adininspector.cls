@@ -32,7 +32,7 @@
 %% ---------------------------------------------------------------
 %% | Based on KOMAscript by Markus Kohm http://www.komascript.de |
 %% ---------------------------------------------------------------
-\LoadClass[12pt,a4paper,titlepage=false,DIV=15,headsepline]{scrartcl}
+\LoadClass[12pt,a4paper,titlepage=false,DIV=15,headsepline]{scrreprt}
 
 %% ---------------
 %% | Page Layout |
