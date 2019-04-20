@@ -1,11 +1,10 @@
 \chapter{Design}\label{sec:design}
-\section{Design}\label{sec:intro}
-\subsection{Front-End}
+\section{Front-End}
 This subsection describes the front-end of the ADIN INSPECTOR - the UI elements the GUI consists of, and how states are handled. A series of final UI design mockups are presented under UI Design Mockups subsection, whereas an overview of the GUI classes can be seen in \autoref{fig:gui_overview}.\\
 
 The GUI elements are implemented in \href{https://reactjs.org/}{\color{blue}{React}} and \href{https://material-ui.com/}{\color{blue}{Material UI}}, whereas the internal logic and application state management are written with \href{https://mobx.js.org/}{\color{blue}{MobX}}.
 
-\subsubsection{UI Design Mockups}
+\subsection{UI Design Mockups}
 
 An early stage interactive demo is available at \url{https://adin-frontend.netlify.com}.\\
 
@@ -104,7 +103,7 @@ An early stage interactive demo is available at \url{https://adin-frontend.netli
 
 \clearpage
 
-\subsubsection{Class Diagrams}
+\subsection{Class Diagrams}
 \begin{figure}[h!]
 	\begin{adjustbox}
 		{addcode={\begin{minipage}{\width}}
@@ -163,7 +162,7 @@ An early stage interactive demo is available at \url{https://adin-frontend.netli
 \end{figure}
 
 \clearpage
-\subsubsection{Sequence Diagram}
+\subsection{Sequence Diagram}
 
 \begin{figure}[h!]
 	\includegraphics[max size={\textwidth}{\textheight}]{images_design/login1.pdf}
@@ -201,7 +200,7 @@ An early stage interactive demo is available at \url{https://adin-frontend.netli
 \clearpage
 
 
-\subsection{Client-server protocol}
+\section{Client-server protocol}
 The client (web browser) and server communicate using the encrypted WebSocket protocol (wss://).
 Messages between client and server are exchanged as strings in JSON format.
 Communication is typically initiated by the client. Each request has a message id which is echoed back in the response to help the sender to link the response to the request. The ids can be random, they don't have to be in a specific order.
@@ -216,7 +215,7 @@ Responses carrying data, specifically "data set" and "collection size", will ech
 \\
 In the following list words in angle brackets ("<>") are placeholders.
 
-\subsubsection{Requests from client to server:}
+\subsection{Requests from client to server:}
 \begin{itemize}
 	\item{login}
 	      \\
@@ -280,7 +279,7 @@ In the following list words in angle brackets ("<>") are placeholders.
 
 \newpage
 
-\subsubsection{Responses from server to client:}
+\subsection{Responses from server to client:}
 \begin{itemize}
 	\item{session control}
 	      \\
@@ -316,7 +315,7 @@ In the following list words in angle brackets ("<>") are placeholders.
 	      where <name> is the name of a data collection and each record is a JSON object describing a data point from this collection. If <key> is not an empty string, then the data array will contain those data points from the given collection for which the key value is in the interval [<start>, <end>).
 \end{itemize}
 
-\subsection{Back-End}
+\section{Back-End}
 This subsection deals with the back-end of the ADIN INSPECTOR. How the system deals with client http calls, and how kafka interacts with the system.
 An overview of the system can be seen in \autoref{fig:class_back_end}. Smaller subsections have been expanded in \autoref{fig:class_back_end_init}, \autoref{fig:class_back_end_mongo}, \autoref{fig:class_back_end_hub}.
 
@@ -325,7 +324,7 @@ The Hub class and the ClientProtocolHandler access the database via an object th
 Classes that implement IUserSession are instantiated with a factory Method (UserSession()) which guarantees that the returned object represents a successfully logged in database session.
 
 
-\subsubsection{Class Diagram}
+\subsection{Class Diagram}
 The overview in  \autoref{fig:class_back_end} shows a number of classes and their interaction with each other. What follows is a more in-depth view of what each component of this diagram does, what data it stores and how it fits into the overarching architecture.
 
 \clearpage
@@ -887,7 +886,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 \end{figure}
 \newpage
 
-\subsubsection{Sequence Diagrams}
+\subsection{Sequence Diagrams}
 \autoref{fig:seq_server_init}  shows the initalization sequence order, the correspoding class diagram is \autoref{fig:class_back_end_init}, the program dependes on a couple of services namely (in order), the zookeeper serivce, the kafka server service and the mongoDB service. Once all services are up and running the MongoConsumer is created and can start consuming messages and the Hub can start listening to client logins, requests, etc.
 \begin{figure}[h!]
 	\includegraphics[max size={\textwidth}{\textheight}]{images_design/sequence_server_init.png}
@@ -896,7 +895,7 @@ The overview in  \autoref{fig:class_back_end} shows a number of classes and thei
 \end{figure}
 
 
-\subsubsection{Activity Diagram}
+\subsection{Activity Diagram}
 
 As previously mentioned for UAC the built-in UAC in MongoDB is used. \\
 \autoref{fig:act_UAC} shows the workflow on adding new roles and new user, who upon creation have a role assigned to them, to MongoDB.
@@ -927,10 +926,10 @@ The admin role , created by default, can create and destroy users as well as ass
 \end{figure}
 
 \clearpage
-\subsection{Changes}
+\section{Changes}
 Changes made between version 1.1.0 and version 2.0.0 of this document.
 
-\subsubsection{Changes to the client-server protocol}
+\subsection{Changes to the client-server protocol}
 The protocol responses have been made more expressive in general.
 \begin{itemize}
 	\item{Rename "LOGIN\_TOKEN" request to "AUTH".}
