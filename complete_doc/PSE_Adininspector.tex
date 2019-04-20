@@ -1,0 +1,167 @@
+%% LaTeX2e class for seminar theses
+%% pflichtenheft.tex
+%% 
+%% Karlsruhe Institute of Technology
+%% Institute for Program Structures and Data Organization
+%% Chair for Software Design and Quality (SDQ)
+%%
+%% Version 1.0
+
+%% Available page modes: oneside, twoside
+%% Available languages: english, ngerman
+%% Available modes: draft, final (see README)
+\documentclass[oneside, english, final]{PSE_Adininspector}
+
+%% ---------------------------------
+%% | Information about the thesis  |
+%% ---------------------------------
+
+%% Name of the author
+\author{PSE GRUPPE}
+
+%% Title (and possibly subtitle) of the thesis
+\title{Real-time visualization of analyzed industrial communication network traffic}
+
+%% Type of the thesis 
+% \thesistype{Seminar Thesis}
+
+%% Change the institute here, ``IPD'' is default
+ \myinstitute{ KOMPETENZZENTRUM FÜR ANGEWANDTE SICHERHEITSTECHNOLOGIE }
+
+%% The advisors are PhD Students or Postdocs
+\advisor{M.Sc. Ankush Meshram}
+
+\settitle
+
+%% --------------------------------
+%% | Settings for word separation |
+%% --------------------------------
+
+%% Describe separation hints here.
+%% For more details, see 
+%% http://en.wikibooks.org/wiki/LaTeX/Text_Formatting#Hyphenation
+\hyphenation{
+% me-ta-mo-del
+}
+
+%% --------------------------------
+%% | Bibliography                 |
+%% --------------------------------
+
+%% Use biber instead of BibTeX, see README
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{mwe}
+\usepackage{flafter}
+\usepackage[citestyle=numeric,style=numeric,backend=biber]{biblatex}
+\addbibresource{Pflichtenheft.bib}
+
+\usepackage[nonumberlist]{glossaries}
+\makeglossaries
+
+\newglossaryentry{data point}
+{
+	name=data point,
+	plural=data points,
+	description={A tuple of values or key-value pairs},
+}
+
+\newglossaryentry{data source}
+{
+	name=data source,
+	plural=data sources,
+	description={A data source is a service that provides a network interface that can be accessed by the GUI and provides one or more data streams}
+}
+
+\newglossaryentry{data stream}
+{
+	name=data stream,
+	plural=data streams,
+	description={A sequence of data points of the same type. A data stream may grow dynamically, in which case it will provide a kind of "read next" method}
+}
+
+\newglossaryentry{diagram}
+{
+	name=diagram,
+	plural=diagrams,
+	description={A graphical representation of \glspl{data point} as per a certain \gls{diagram type}. Each data point is represented by a symbol whose position, size, color, shape etc. represent values of the data point. The diagram has labeled axes and, for other properties of the symbol, legends that allow the user to determine the values represented by each symbol}
+}
+
+\newglossaryentry{diagram container}
+{
+	name=diagram container,
+	plural=diagram containers,
+	description={The area of the GUI within which the diagram(s) are displayed}
+}
+
+\newglossaryentry{diagram type}
+{
+	name=diagram type,
+	plural=diagram types,
+	description={A diagram type is a specific style or method of drawing a diagram and visualizing its data points}
+}
+
+\newglossaryentry{offline}
+{
+	name=offline,
+	description={a mode in which data is read from the database. Also: "offline data", data that is read from the database}
+}
+
+
+\newglossaryentry{online}
+{
+	name=online,
+	description={a mode in which data is read from a streaming service or messenger service. Also: "online data", data that is read from such a service}
+}
+
+
+\newglossaryentry{role}
+{
+	name=role,
+	plural=roles,
+	description={A security role is a list of access permissions. It determines which data streams (and, potentially, which diagram types and which data operations) are accessible to a user with a given role}
+}
+
+
+%% ====================================
+%% ====================================
+%% ||                                ||
+%% || Beginning of the main document ||
+%% ||                                ||
+%% ====================================
+%% ====================================
+\begin{document}
+
+
+%% Set PDF metadata
+\setpdf
+
+%% Set the title
+\maketitle
+
+%% ----------------
+%% |   Abstract   |
+%% ----------------
+This Document outlines the requirements (both functional and non-functional), environment, target audience, and use cases of the software described below.
+
+\hfill
+
+\begin{center}
+	\large{Version 1.0.1}
+\end{center}
+
+
+%% -----------------
+%% |   Main part   |
+%% -----------------
+
+\thispagestyle{empty}
+\newpage
+\thispagestyle{empty}
+\tableofcontents
+\cleardoublepage
+\setcounter{page}{1}
+
+\include{chapter_Pflichtenheft}
+
+\end{document}
