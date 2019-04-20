@@ -1,14 +1,13 @@
 #!/bin/sh
-rm -f Pflichtenheft.ist
-rm Pflichtenheft.ist
-rm Pflichtenheft.aux
-rm Pflichtenheft.bcf
-rm Pflichtenheft.run.xml
-rm Pflichtenheft.glo
-rm Pflichtenheft.toc
-rm Pflichtenheft.pdf
-rm Pflichtenheft.log
-rm Pflichtenheft.gls
-rm Pflichtenheft.glg
-rm Pflichtenheft.bbl
-rm Pflichtenheft.blg
+rm *.out
+rm *.ist
+rm *.aux
+rm *.bcf
+rm *.run.xml
+rm *.glo
+rm *.toc
+rm *.log
+rm *.gls
+rm *.glg
+rm *.bbl
+rm *.blg
