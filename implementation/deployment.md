@@ -1,6 +1,22 @@
-# Deployment/Installation Manual for the ADIN Inspector System
+  <a href="https://adin-frontend.netlify.com">
+    <img alt="Logo" src="https://adin-frontend.netlify.com/logo.svg" width="80"
+ />
+  </a>
+</p>
 
-## Tested software environment
+<h1 align="center">
+  Drawing How Stuff Talk To Other Stuff
+</h1>
+
+DHSTTOS (Drawing How Stuff Talks To Other Stuff) project is part of the ADIN (Anomaly Detection in Industrial Networks) suite.
+
+DHSTTOS mainly consists of 2 sub-projects: the [frontend](frontend) and [backend](Back-end). 
+
+A walkthrough screencast of the frontend can be found [here](https://youtu.be/Vt3kImBWPbI).
+
+## Deployment/Installation 
+
+### Tested software environment
 (With front-end and back-end on the same server)
 Ubuntu 18.04.1 LTS
 
@@ -40,39 +56,49 @@ nodejs 10.15.0
 You will also need [node.js 10+ (with npm 6+)](https://nodejs.org/en/) to build the frontend modules. Consider using [nvm](https://github.com/creationix/nvm) to manage multiple node installations on your system.
 
 
-## Configuration of the webserver
+### Configuration of the webserver
 The following setup uses one webserver for both the frontend (the website that the user accesses) and the back-end (the database accessed from the frontend javascript program).
 
+#### Backend dependencies
 
-### The repository address
+##### 1. `MongoDB  <= 4.0.6`
 
-The following repository 
-https://github.com/DHSTTOS/implementation
-contains all source and configuration files for both back-end and front-end.
+The Mongo service needs to be running and a user account with read/write for all collections and databases as well as a AdinInspector Database and an authentication database under an 'admin' database.
 
+A [dump](https://docs.mongodb.com/manual/reference/program/mongodump/) containing all relevant databases and the provided test datasets can be found on this directory under dump/.
 
-### Kafka and MongoDB
-Please refer to the README.md for the [Back-end](https://github.com/DHSTTOS/implementation/tree/master/Back-end)
+To export it you can use the [mongorestore](https://docs.mongodb.com/manual/reference/program/mongorestore/#bin.mongorestore) utility.
 
+Make sure that the mongo service is running, if not run `sudo service mongod start`
 
-### Building the .jar file (the servlet) from the java source
+i.e. `run mongorestore -u "ADMINUSER" -p "PASS"` on the same directory as the dump/ directory.
 
-Fetch the repository, then run the following commands:
+##### 2. Kafka 2.1.0
 
-```bash
-cd implementation/Back-end
-mvn clean compile assembly:single
-```
+Installation instructions for Kafka can be found [here](https://kafka.apache.org/quickstart)
 
-This will produce the file `target/adininspector-backend-0.0.1-SNAPSHOT-jar-with-dependencies.jar` and bundle all necessary dependencies with it.
+The programm needs the Kafka server to be up and the Kafka server needs Zookeper to be started.
 
+Navigate to the kafka installation directory.
 
-### Apache Tomcat server
-#### Installing Tomcat
+**start zookeper** : 
+
+  `sudo bin/zookeeper-server-start.sh config/zookeeper.properties`
+
+**start Kafka** : 
+
+  `sudo bin/kafka-server-start.sh config/server.properties`
+
+##### 3. Apache Tomcat server
+
+**Installing Tomcat**:
+  
 see e.g.
+
  https://www.digitalocean.com/community/tutorials/install-tomcat-9-ubuntu-1804
 
-#### Configuring Tomcat
+**Configuring Tomcat**:
+  
 This may vary depending on the specific underlying OS.
 On digital ocean's droplet hooking tomcat up to the systemd demon resulted in the server aborting and restarting in a loop.
 Starting tomcat manually instead works.
@@ -93,6 +119,21 @@ This file is set up to make use of a certificate in `/etc/letsencrypt/` to enabl
 Tomcat will still run without such a certificate, but only `http://` connections will be available.
 
 You can get a certificate from e.g. [Let's Encrypt](https://letsencrypt.org/getting-started/).
+
+
+
+#### Building the .jar file (the servlet) from the java source
+
+Fetch the repository, then run the following commands:
+
+```bash
+cd implementation/Back-end
+mvn clean compile assembly:single
+```
+
+This will produce the file `target/adininspector-backend-0.0.1-SNAPSHOT-jar-with-dependencies.jar` and bundle all necessary dependencies with it.
+
+
 
 #### Installing the webapps/adininspector content
 
@@ -179,6 +220,18 @@ to stop the tomcat server:
 ./bin/catalina.sh stop
 ```
 
+#### Frontend dependencies / development
+
+0. `cd` into frontend sub directory
+1. Install dependencies with `npm i` (please don't use `yarn`)
+1. Run `npm run build` to create an optimized production build or run `npm start` to spin up a local dev server. In which case http://localhost allows you to connecto to an unencryptes WebScocket endpoint.
+
+Because we allow the user to enter their own WebSocket endpoint of DHSTTOS back
+end, this web application can be hosted anywhere. One thing to notice is that f
+or most browsers, if the user loads this app from a server which enforces HTTPS
+ (eg. vanilla Netlify), they won't be able to connect to an unencrypted WebSock
+et endpoint via `ws://` protocol, so `wss://` is required.
+
 ### Firewall
 
 If a firewall is installed, open the following ports for incoming connections:
@@ -188,5 +241,39 @@ Although we recommend against SSH'ing into the server to make changes to the fro
 
 Optionally, for the development environment, also open:
 8080 and 8433 (for http and https)
+
+
+## Notes On How To Contribute to the frontend
+
+This Frontend uses [React](https://reactjs.org/tutorial/tutorial.html) for all the UI elements, [MobX](https://mobx.js.org/getting-started.html) for state management, [D3v5](https://d3js.org/#introduction), D3v2 (only for the node-link diagram) and [Nivo](https://nivo.rocks/) for rendering the diagrams.
+
+All the diagram components are placed inside [`/src/components/Diagram`](src/components/Diagram) directory.
+
+Before creating a PR, please run `npm run format` to do an autoformat, so that we can keep the code style consistent throughout the project.
+
+The [`/src/libs`](src/libs) should contain _ONLY_ static helper functions or classes. Do _not_ invoke any methods or functions on the root level of any files there, as it might create a dependency loop/deadlock situation. (Due to the scripting nature of JS, you can imagine everything is wrapped inside an invisible `main()` function. The engine executes every single line when it runs through the source code.)
+
+State management is handled with MobX in a observer/reactive manner. Access and mutate the state anywhere inside the project via simply referencing the corresponding class attributes inside [`/stores`](src/stores) or reassigning values to them.
+
+Most of the development of the node-link diagram was happening inside [`../misc/network_demo`](https://github.com/DHSTTOS/implementation/tree/master/misc/network_demo), but we have already migrated everything there into [`/src/components/Diagram/NodeLinkBlock.js`](src/components/Diagram/NodeLinkBlock.js).
+
+If you have access to our server, log in as root (I know 😅) and run `boom` to rebuild and redeploy both the login page and this app based on the latest master branch, in order to test the complete frontend suite.
+
+## License
+
+The source code of the Frontend is licensed under [BSD 4-Clause "Original" license](LICENSE).
+
+For other modules of the DHSTTOS platform (eg. the backend server code), please refer to the respective license documents in their own subdirectories.
+## Credits
+
+[Klevia Ulqinaku](https://github.com/klevia) - Login Page UI, Data Visualization
+
+[Philipp Mergenthaler](https://github.com/pm8008) - Client-Server Communication, Data Visualization
+
+[Xiaoru Li](https://github.com/hexrcs) - Original UI design, Main Page UI, Data Visualization, Client-Server Communication, Project Logo Design
+
+[Mario Gonzalez](https://github.com/mgonzalez01) - Database Management storage, provision and communication with Kafka
+
+[Philipp Mergenthaler](https://github.com/pm8008) - Client-Server Communication, Data Visualization
 
 
