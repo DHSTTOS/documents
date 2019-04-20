@@ -60,7 +60,8 @@ You will also need [node.js 10+ (with npm 6+)](https://nodejs.org/en/) to build 
 The following setup uses one webserver for both the frontend (the website that the user accesses) and the back-end (the database accessed from the frontend javascript program).
 
 #### Backend dependencies
-1. `MongoDB  <= 4.0.6`
+
+##### 1. `MongoDB  <= 4.0.6`
 
 The Mongo service needs to be running and a user account with read/write for all collections and databases as well as a AdinInspector Database and an authentication database under an 'admin' database.
 
@@ -72,7 +73,7 @@ Make sure that the mongo service is running, if not run `sudo service mongod sta
 
 i.e. `run mongorestore -u "ADMINUSER" -p "PASS"` on the same directory as the dump/ directory.
 
-2. Kafka 2.1.0
+##### 2. Kafka 2.1.0
 
 Installation instructions for Kafka can be found [here](https://kafka.apache.org/quickstart)
 
@@ -80,22 +81,23 @@ The programm needs the Kafka server to be up and the Kafka server needs Zookeper
 
 Navigate to the kafka installation directory.
 
-start zookeper : 
+**start zookeper** : 
 
   `sudo bin/zookeeper-server-start.sh config/zookeeper.properties`
 
-start Kafka : 
+**start Kafka** : 
 
   `sudo bin/kafka-server-start.sh config/server.properties`
 
-3. Apache Tomcat server
+##### 3. Apache Tomcat server
 
-  Installing Tomcat:
+**Installing Tomcat**:
   
 see e.g.
+
  https://www.digitalocean.com/community/tutorials/install-tomcat-9-ubuntu-1804
 
-  Configuring Tomcat:
+**Configuring Tomcat**:
   
 This may vary depending on the specific underlying OS.
 On digital ocean's droplet hooking tomcat up to the systemd demon resulted in the server aborting and restarting in a loop.
@@ -117,18 +119,6 @@ This file is set up to make use of a certificate in `/etc/letsencrypt/` to enabl
 Tomcat will still run without such a certificate, but only `http://` connections will be available.
 
 You can get a certificate from e.g. [Let's Encrypt](https://letsencrypt.org/getting-started/).
-
-#### Frontend dependencies
-
-0. `cd` into frontend sub directory
-1. Install dependencies with `npm i` (please don't use `yarn`)
-1. Run `npm run build` to create an optimized production build
-
-Because we allow the user to enter their own WebSocket endpoint of DHSTTOS back
-end, this web application can be hosted anywhere. One thing to notice is that f
-or most browsers, if the user loads this app from a server which enforces HTTPS
- (eg. vanilla Netlify), they won't be able to connect to an unencrypted WebSock
-et endpoint via `ws://` protocol, so `wss://` is required.
 
 
 
@@ -230,6 +220,18 @@ to stop the tomcat server:
 ./bin/catalina.sh stop
 ```
 
+#### Frontend dependencies / development
+
+0. `cd` into frontend sub directory
+1. Install dependencies with `npm i` (please don't use `yarn`)
+1. Run `npm run build` to create an optimized production build or run `npm start` to spin up a local dev server. In which case http://localhost allows you to connecto to an unencryptes WebScocket endpoint.
+
+Because we allow the user to enter their own WebSocket endpoint of DHSTTOS back
+end, this web application can be hosted anywhere. One thing to notice is that f
+or most browsers, if the user loads this app from a server which enforces HTTPS
+ (eg. vanilla Netlify), they won't be able to connect to an unencrypted WebSock
+et endpoint via `ws://` protocol, so `wss://` is required.
+
 ### Firewall
 
 If a firewall is installed, open the following ports for incoming connections:
@@ -241,6 +243,27 @@ Optionally, for the development environment, also open:
 8080 and 8433 (for http and https)
 
 
+## Notes On How To Contribute to the frontend
+
+This Frontend uses [React](https://reactjs.org/tutorial/tutorial.html) for all the UI elements, [MobX](https://mobx.js.org/getting-started.html) for state management, [D3v5](https://d3js.org/#introduction), D3v2 (only for the node-link diagram) and [Nivo](https://nivo.rocks/) for rendering the diagrams.
+
+All the diagram components are placed inside [`/src/components/Diagram`](src/components/Diagram) directory.
+
+Before creating a PR, please run `npm run format` to do an autoformat, so that we can keep the code style consistent throughout the project.
+
+The [`/src/libs`](src/libs) should contain _ONLY_ static helper functions or classes. Do _not_ invoke any methods or functions on the root level of any files there, as it might create a dependency loop/deadlock situation. (Due to the scripting nature of JS, you can imagine everything is wrapped inside an invisible `main()` function. The engine executes every single line when it runs through the source code.)
+
+State management is handled with MobX in a observer/reactive manner. Access and mutate the state anywhere inside the project via simply referencing the corresponding class attributes inside [`/stores`](src/stores) or reassigning values to them.
+
+Most of the development of the node-link diagram was happening inside [`../misc/network_demo`](https://github.com/DHSTTOS/implementation/tree/master/misc/network_demo), but we have already migrated everything there into [`/src/components/Diagram/NodeLinkBlock.js`](src/components/Diagram/NodeLinkBlock.js).
+
+If you have access to our server, log in as root (I know 😅) and run `boom` to rebuild and redeploy both the login page and this app based on the latest master branch, in order to test the complete frontend suite.
+
+## License
+
+The source code of the Frontend is licensed under [BSD 4-Clause "Original" license](LICENSE).
+
+For other modules of the DHSTTOS platform (eg. the backend server code), please refer to the respective license documents in their own subdirectories.
 ## Credits
 
 [Klevia Ulqinaku](https://github.com/klevia) - Login Page UI, Data Visualization
