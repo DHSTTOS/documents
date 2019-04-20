@@ -1,0 +1,1070 @@
+%% LaTeX file for Design representation
+%% design.tex
+%% 
+%% Karlsruhe Institute of Technology
+%% Version 1.0, 2018-12-13
+
+%% Available page modes: oneside, twoside
+%% Available languages: english, ngerman
+%% Available modes: draft, final (see README)
+\documentclass[oneside, english, final]{design}
+
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{pdfpages}
+\usepackage[export]{adjustbox}
+\usepackage{hyperref}
+
+\hypersetup{hidelinks,
+backref=true,
+pagebackref=true,
+hyperindex=true,
+breaklinks=true,
+colorlinks=true, linkcolor=black,
+urlcolor=blue,
+bookmarks=true,
+bookmarksopen=false,
+pdftitle={Title},
+pdfauthor={Author}}
+
+%usepackage{lipsum}
+
+
+%% ---------------------------------
+%% | Information about the thesis  |
+%% ---------------------------------
+
+%% Name of the author
+\author{PSE Group}
+
+%% Title (and possibly subtitle) of the thesis
+\title{Real-time visualization of analyzed industrial communication network traffic\\ \hfill \\Design}
+
+%% Type of the thesis 
+%\thesistype{PSE}
+
+%% The advisors are PhD Students or Postdocs
+\advisor{M.Sc. Ankush Meshram}
+%\begin{document}
+
+
+%\end{document}
+\thispagestyle{empty}
+
+\settitle
+
+%% --------------------------------
+%% | Settings for word separation |
+%% --------------------------------
+
+%% Describe separation hints here.
+%% For more details, see 
+%% http://en.wikibooks.org/wiki/LaTeX/Text_Formatting#Hyphenation
+\hyphenation{
+% me-ta-mo-del
+}
+
+%% --------------------------------
+%% | Bibliography                 |
+%% --------------------------------
+
+%% Use biber instead of BibTeX, see README
+\usepackage[citestyle=numeric,style=numeric,backend=biber]{biblatex}
+\usepackage{microtype}
+
+\addtolength{\belowcaptionskip}{-10pt}
+\setlength{\textfloatsep}{10pt plus 1.0pt minus 2.0pt}
+%\addtolength{\abovecaptionskip}{-100pt}
+\frenchspacing
+%% ====================================
+%% ====================================
+%% ||                                ||
+%% || Beginning of the main document ||
+%% ||                                ||
+%% ====================================
+%% ====================================
+\begin{document}
+\nocite{*}
+
+%% Set PDF metadata
+\setpdf
+
+%% Set the title
+\maketitle
+
+%% ----------------
+%% |   Abstract   |
+%% ----------------
+
+\hfill
+
+\begin{center}
+	\large{Version 2.0.0}
+\end{center}
+
+
+%% The text is included from the following files:
+%% - sections/abstract
+\thispagestyle{empty}
+\begin{abstract}
+	\thispagestyle{empty}
+\end{abstract}
+
+%% -----------------
+%% |   Main part   |
+%% -----------------
+\thispagestyle{empty}
+\newpage
+\thispagestyle{empty}
+\tableofcontents
+\cleardoublepage
+\setcounter{page}{1}
+
+
+\section{Design}\label{sec:intro}
+\subsection{Front-End}
+This subsection describes the front-end of the ADIN INSPECTOR - the UI elements the GUI consists of, and how states are handled. A series of final UI design mockups are presented under UI Design Mockups subsection, whereas an overview of the GUI classes can be seen in \autoref{fig:gui_overview}.\\
+
+The GUI elements are implemented in \href{https://reactjs.org/}{\color{blue}{React}} and \href{https://material-ui.com/}{\color{blue}{Material UI}}, whereas the internal logic and application state management are written with \href{https://mobx.js.org/}{\color{blue}{MobX}}.
+
+\subsubsection{UI Design Mockups}
+
+An early stage interactive demo is available at \url{https://adin-frontend.netlify.com}.\\
+
+
+
+\begin{figure}[hp]
+	\begin{adjustbox}
+		{addcode={\begin{minipage}{\width}}
+						{\caption{%
+							Login screen
+						}
+						\label{fig:mockup_login}
+					\end{minipage}}
+			,center}
+		\fbox{\includegraphics[max size={\textwidth}{0.4\textheight}]{images/loginNew.PNG}}
+	\end{adjustbox}
+\end{figure}
+
+\begin{figure}[h!]
+	\begin{adjustbox}
+		{addcode={\begin{minipage}{\width}}
+						{\caption{%
+							Initial empty screen
+						}
+						\label{fig:mockup_empty}
+					\end{minipage}}
+			,center}
+		\fbox{\includegraphics[max size={\textwidth}{0.4\textheight}]{images/ui_design/Main/0.png}}
+	\end{adjustbox}
+\end{figure}
+
+\begin{figure}[h!]
+	\begin{adjustbox}
+		{addcode={\begin{minipage}{\width}}
+						{\caption{%
+							Adding first diagram
+						}
+						\label{fig:mockup_config}
+					\end{minipage}}
+			,center}
+		\fbox{\includegraphics[max size={\textwidth}{0.4\textheight}]{images/ui_design/Main/1.png}}
+	\end{adjustbox}
+\end{figure}
+
+\begin{figure}[h!]
+	\begin{adjustbox}
+		{addcode={\begin{minipage}{\width}}
+						{\caption{%
+							Displaying a single diagram
+						}
+						\label{fig:mockup_single_diagram}
+					\end{minipage}}
+			,center}
+		\fbox{\includegraphics[max size={\textwidth}{0.4\textheight}]{images/ui_design/Main/2.png}}
+	\end{adjustbox}
+\end{figure}
+
+\begin{figure}[h!]
+	\begin{adjustbox}
+		{addcode={\begin{minipage}{\width}}
+						{\caption{%
+							Adding new or configuring existing diagram
+						}
+						\label{fig:mockup_add_diagram_config}
+					\end{minipage}}
+			,center}
+		\fbox{\includegraphics[max size={\textwidth}{0.4\textheight}]{images/ui_design/Main/3.png}}
+	\end{adjustbox}
+\end{figure}
+
+\begin{figure}[h!]
+	\begin{adjustbox}
+		{addcode={\begin{minipage}{\width}}
+						{\caption{%
+							Displaying two diagrams
+						}
+						\label{fig:mockup_two_diagrams}
+					\end{minipage}}
+			,center}
+		\fbox{\includegraphics[max size={\textwidth}{0.4\textheight}]{images/ui_design/Main/4.png}}
+	\end{adjustbox}
+\end{figure}
+
+\begin{figure}[h!]
+	\begin{adjustbox}
+		{addcode={\begin{minipage}{\width}}
+						{\caption{%
+							Adding additional or configuring existing diagram
+						}
+						\label{fig:mockup_add_more_diagram_config}
+					\end{minipage}}
+			,center}
+		\fbox{\includegraphics[max size={\textwidth}{0.4\textheight}]{images/ui_design/Main/5.png}}
+	\end{adjustbox}
+\end{figure}
+
+\clearpage
+
+\subsubsection{Class Diagrams}
+\begin{figure}[h!]
+	\begin{adjustbox}
+		{addcode={\begin{minipage}{\width}}
+						{\caption{%
+							This diagram shows an overview of GUI elements and their relationships inside the main application, when the user has successfully logged in.
+						}
+						\label{fig:gui_overview}
+					\end{minipage}}
+			,rotate=90,center}
+		\includegraphics[max size={0.94\textheight}{\textwidth}]{images/overview.png}%
+	\end{adjustbox}
+\end{figure}
+
+\begin{figure}[p]
+	\vspace*{-2cm}
+	\makebox[\linewidth]{
+		\begin{adjustbox}
+			{addcode={\begin{minipage}{\width}}
+							{\caption{%
+								This diagram shows the definitions of all representational elements.
+							}
+							\label{fig:component_defs}
+						\end{minipage}},center}
+			\includegraphics[max size={\textheight}{1.5\linewidth}]{images/componentDefs.png}%
+		\end{adjustbox}
+	}
+\end{figure}
+
+\begin{figure}
+	\begin{adjustbox}
+		{addcode={\begin{minipage}{\width}}
+						{\caption{%
+							This diagram shows the design of the MobX state store objects and predefined actions to mutate the states.
+						}
+						\label{fig:state_action_store}
+					\end{minipage}}}
+		\includegraphics[max size={\textwidth}{\textheight}]{images/stateStoresAndActions.png}%
+	\end{adjustbox}
+\end{figure}
+
+\begin{figure}
+	\begin{adjustbox}
+		{addcode={\begin{minipage}{\width}}
+						{\caption{%
+							This diagram shows the definitions of custom types that are used in the MobX state stores.
+						}
+						\label{fig:type_defs}
+					\end{minipage}}}
+		\includegraphics[max size={\textwidth}{\textheight}]{images/typeDefs.png}%
+	\end{adjustbox}
+\end{figure}
+
+\begin{figure}[h!]
+	\includegraphics[max size={\textwidth}{0.9\textheight}]{clientfix.png}
+	\caption{Class diagram representing the filtering chain.}
+\end{figure}
+
+\clearpage
+\subsubsection{Sequence Diagram}
+
+\begin{figure}[h!]
+	\includegraphics[max size={\textwidth}{\textheight}]{login1.pdf}
+	\caption{Sequence diagram of Login Authentication System. The user credentials are transmitted via https and the server returns a token to identify the following user session.}
+	\label{fig:login_https}
+\end{figure}
+\newpage
+
+\begin{figure}[h!]
+	\includegraphics[max size={\textwidth}{\textheight}]{images/ADIN_Inspector_Client-Server-Communication-login.pdf}
+	\caption{This diagram shows an alternative view of the login sequence where the user credentials are transmitted via the same encrypted WebSocket connections which is used for the following session.}
+	\label{fig:login_websocket}
+\end{figure}
+\newpage
+
+\begin{figure}[h!]
+	\includegraphics[max size={\textwidth}{\textheight}]{filterchain.pdf}
+	\caption{Sequence diagram of chaining filters in a specific diagram.}
+\end{figure}
+\newpage
+
+\begin{figure}[h!]
+	\includegraphics[max size={\textwidth}{\textheight}]{option.pdf}
+	\caption{Selecting a specific option from a drop-down menu.}
+\end{figure}
+
+\begin{center}
+	\begin{figure}[h!]
+		\includegraphics[width=\textwidth]{images/sd_frontend_comm-slider_movement.png}
+		\caption{Sequence diagram showing control flow for handling a movement of the slider by the user.}
+		\label{fig:sd_slider_movement}
+	\end{figure}
+\end{center}
+
+\clearpage
+
+
+\subsection{Client-server protocol}
+The client (web browser) and server communicate using the encrypted WebSocket protocol (wss://).
+Messages between client and server are exchanged as strings in JSON format.
+Communication is typically initiated by the client. Each request has a message id which is echoed back in the response to help the sender to link the response to the request. The ids can be random, they don't have to be in a specific order.
+\\
+By default, all requests apart from login will be ignored.  A communication session starts with a login request that is responded to with an "OK" session control message. Within a communication session, login is ignored and all other requests can occur in arbitrary order. On receiving a logout request, the server returns into the default state, i.e logged out.\\
+The user credentials that the user enters in the login web page can be transmitted in two different ways.
+In the first case they are sent via https with the POST method to the web server and the server returns a token which the client (the web browser) will save in a cookie and then transmit to the server in the WebSocket session with the LOGIN\_TOKEN message to authenticate the WebSocket session (see \autoref{fig:login_https}).
+In the alternative case the client opens an encrypted WebSocket connection to the server and sends the user credentials with the LOGIN message; i.e user authentication and data communication take place within the same WebSocket session (see \autoref{fig:login_websocket}).\\
+All communication, including the user authentication, uses https or wss, respectively, both of which use TLS/SSL encryption. The MongoDB data base doesn't store user passwords in plaintext but stores a hashed value derived from the password.\\
+Responses carrying data, specifically "data set" and "collection size", will echo back any key-value pairs that are in addition to those specified in the protocol. This allows the client to add information that will help in processing the response, e.g. when requesting several "chunks" of data that will be concatenated.
+\hfill
+\\
+In the following list words in angle brackets ("<>") are placeholders.
+
+\subsubsection{Requests from client to server:}
+\begin{itemize}
+	\item{login}
+	      \\
+	      syntax: \{"cmd": "LOGIN", "user": "<username>", "pwd": "<password>", "id": "<id>"\} \\
+	      expected response: session control with key "par" having the value "LOGIN"
+
+
+	\item{authentication via token}
+	      \\
+	      syntax: \{"cmd": "AUTH", "token": "<token>", "id": "<id>"\} \\
+	      expected response: session control with "par": "AUTH"
+
+	\item{logout}
+	      \\
+	      syntax: \{"cmd": "LOGOUT", "id": "<id>"\} \\
+	      expected response: session control with "par": "LOGOUT"
+
+	\item{getAvailableCollections}
+	      \\
+	      syntax: \{"cmd": "GET\_AV\_COLL", "id": "<id>"\} \\
+	      expected response: list of collections
+
+	\item{getCollectionSize(collection)}
+	      \\
+	      syntax: \{"cmd": "GET\_COLL\_SIZE", "par": "<collection>", "id": "<id>"\} \\
+	      where <collection> is the name of a collection\\
+	      expected response: collection size
+
+	\item{getStartRecord(collection)}
+	      \\
+	      syntax: \{"cmd": "GET\_START", "par": "<collection>", "id": "<id>"\} \\
+	      expected response: single data point, with "idx": "start" and key "data" containing the first data point of the given collection
+
+	\item{getEndRecord(collection)}
+	      \\
+	      syntax: \{"cmd": "GET\_END", "par": "<collection>", "id": "<id>"\} \\
+	      expected response: single data point, with "idx": "end" and key "data" containing the last data point of the given collection
+
+	\item{getEndpoints(collection)}
+	      \\
+	      syntax: \{"cmd": "GET\_ENDPOINTS", "par": "<collection>", "id": "<id>"\} \\
+	      expected response: data endpoints, with the key "data" containing a array consisting of the first and the last data point of the given collection
+
+	\item{getCollection(collection)}
+	      \\
+	      syntax: \{"cmd": "GET\_COLL", "par": "<collection>", "id": "<id>"\} \\
+	      expected response: data set
+
+	\item{getRecordsInRange(collection, key, start, end)}
+	      \\
+	      syntax: \{"cmd": "GET\_RECORDS\_RANGE", "par": "<collection>", "key": "<keyvalue>", "start": "<startvalue>", "end": "<endvalue>", "id": "<id>"\} \\
+	      where <key> is the name of a key in the given collection and <startvalue> and <endvalue> are valid values for this key\\
+	      expected response: data set, where key "data" contains all data points (i.e. records) from the given collection for which the given key is in the interval [start, end).
+
+	\item{getRecordsInRangeSize(collection, key, start, end)}
+	      \\
+	      syntax: \{"cmd": "GET\_RECORDS\_RANGE\_SIZE", "par": "<collection>", "key": "<keyvalue>", "start": "<startvalue>", "end": "<endvalue>", "id": "<id>"\} \\
+	      expected response: collection size, where the key "par" gives the number of data points that would be returned by a getRecordsInRange() request with the same arguments.
+
+\end{itemize}
+
+\newpage
+
+\subsubsection{Responses from server to client:}
+\begin{itemize}
+	\item{session control}
+	      \\
+	      syntax: \{"cmd": "SESSION", "par": "<specifier>", "status": "<status>", msg": "<message>", "id": "<id>"\} \\
+	      where <specifier> is one of "LOGIN", "AUTH", oder "LOGOUT", <status> is either "OK" or "FAIL" and <message> is a string, e.g. an error message\\
+	      "OK" as status for "LOGIN" and "AUTH" indicates a successful login, i.e. that the client session has started. "OK" as status for "LOGOUT" indicates that the server had ended the session and the user has been logged out.
+
+	\item{list of collections}
+	      \\
+	      syntax: \{"cmd": "LIST\_COLL", "par": ["<collection>"], "id": "<id>"\} \\
+	      where <collection> is the name of a collection
+
+	\item{collection size}
+	      \\
+	      syntax: \{"cmd": "COLL\_SIZE", "name": "<name>", "key", "", "par": "<size>", "id": "<id>"\} \\
+	      syntax: \{"cmd": "COLL\_SIZE", "name": "<name>", "key", "<key>", "start": "<start>", "end": "<end>", "par": "<size>", "id": "<id>"\} \\
+	      where <name> is the name of a data collection and <size> is the number of data points in this collection . If <key> is not an empty string, then <size> will be the number of data points from the given collection for which the key value is in the interval [<start>, <end>).
+
+	\item{single data point}
+	      \\
+	      syntax: \{"cmd": "DATASINGLE", "name": "<collection>", "idx": "<idx>", "data": "<data>", "id": "<id>"\} \\
+	      where <collection> is the name of a collection, "idx" has either the value "start" or "end", and <data> is a string representing a single data point in JSON format.
+
+	\item{data endpoints}
+	      \\
+	      syntax: \{"cmd": "DATA\_ENDPOINTS", "name": "<collection>", "data": ["<start>", "<end>"], "id": "<id>"\} \\
+	      where <collection> is the name of a collection and <start> and <end> are the first and last data point of this collection.
+
+	\item{data set}
+	      \\
+	      syntax: \{"cmd": "DATA", "name": "<name>", "key": "", "data": [<record>], "id": "<id>"\} \\
+	      syntax: \{"cmd": "DATA", "name": "<name>", "key": "<key>", "start": "<start>", "end": "<end>", "data": [<record>], "id": "<id>"\} \\
+	      where <name> is the name of a data collection and each record is a JSON object describing a data point from this collection. If <key> is not an empty string, then the data array will contain those data points from the given collection for which the key value is in the interval [<start>, <end>).
+\end{itemize}
+
+\subsection{Back-End}
+This subsection deals with the back-end of the ADIN INSPECTOR. How the system deals with client http calls, and how kafka interacts with the system.
+An overview of the system can be seen in \autoref{fig:class_back_end}. Smaller subsections have been expanded in \autoref{fig:class_back_end_init}, \autoref{fig:class_back_end_mongo}, \autoref{fig:class_back_end_hub}.
+
+The connection to the client is handled in the class Hub which contains handlers for the network interface. This class uses a separate class (ClientProtocolHandler) to parse and handle requests from the handler. This setup is according to the strategy design pattern and allows easily modifying or even replacing the client server-protocol.
+The Hub class and the ClientProtocolHandler access the database via an object that implements the IUserSession interface and encapsulates the database session. Currently there is only an implementation for MongoDB access (MongoDBUserSession), but the abstraction via the IUserSession interface allows to add classes that offer access to Kafka or other databases.
+Classes that implement IUserSession are instantiated with a factory Method (UserSession()) which guarantees that the returned object represents a successfully logged in database session.
+
+
+\subsubsection{Class Diagram}
+The overview in  \autoref{fig:class_back_end} shows a number of classes and their interaction with each other. What follows is a more in-depth view of what each component of this diagram does, what data it stores and how it fits into the overarching architecture.
+
+\clearpage
+\begin{figure}[h!]
+	\includegraphics[max size={\textwidth}{\textheight}]{images/class_back-end_init.png}
+	\caption{The classes involved in the initialization setup}
+	\label{fig:class_back_end_init}
+\end{figure}
+
+
+\begin{itemize}
+
+	\item[•] Config properties file
+	      \\The config file is stored alongside the built application .jar file and contains the path to the Kafka installation folder, the user name and password of a mongoDB account with the highest level of access and the name of the database.
+
+	\item[•]Initializer
+	      \\Methods:
+	      \begin{itemize}
+		      \item[-]main
+		            \\ parameters: String of arguments from the console
+		            \\ returns: void
+		            \\ App entry point.
+		            \\ We load the config.properties life and use the path provided to start the zookeeper, kafka and mongodb services
+	      \end{itemize}
+
+
+	\item[•]MongoConsumer
+	      \\The Mongo Consumer, as the name implies, consumes all messages from all topics in the Kafka messaging system. Once a message is found it is passed along to the Mongo Client for further processing.
+	      \\Attributes
+	      \begin{itemize}
+		      \item[-]clientMediator
+		            \\Type : MongoClientMediator
+		            \\ An instance of the Mongo Client Mediator, created with the credentials from the config file.
+	      \end{itemize}
+	      Methods
+	      \begin{itemize}
+		      \item[-]MongoConsumer constructor
+		            \\parameters: user name and password of a mongoDB account with the highest level of access.
+		            \\ Initializes the MongoClient variable and calls listenForRecords();
+		      \item[-]getAllTopics
+		            \\parameters: none
+		            \\returns: an array of strings containing all the available kafka Topics.
+		            \\Asks the kafka server service which topics exists.
+		      \item[-]listenForRecords
+		            \\parameters: none
+		            \\returns: void
+		            \\This Method first calls getAllTopics and uses the array of topics to poll the kafka server for new messages.
+		            \\If new messages are found then the messages are passed to the Mongo Mediator for adding them to the Database.
+		            \\If no new messages are found for a topic notify the Mongo Mediator that the collection tied to the topic is ready for pre-processing.
+	      \end{itemize}
+
+
+
+	      \begin{figure}[h!]
+		      \includegraphics[max size={\textwidth}{\textheight}]{images/class_back-end_mongo.png}
+		      \caption{The classes involved in reading and writing data into the database}
+		      \label{fig:class_back_end_mongo}
+	      \end{figure}
+	      \clearpage
+	\item[•]MongoClientMediator
+	      This object serves as a nexus between the users who want to get data out of the database and the consumer and dataProcessor who want to add data into the database. This class encapsulates the mongo client from the mongo API. This means that any user wanting to sign in has to have valid credentials in the database, effectively relegating UAC to mongoDB.
+	      \\Attributes
+	      \begin{itemize}
+		      \item[-] client
+		            \\type: MongoClient
+		            \\ An instance of the Mongo Client from the official java API.
+		      \item[-] dataProc
+		            \\ A reference to the data processor class for this client.
+	      \end{itemize}
+	      Methods
+	      \begin{itemize}
+		      \item[-]MongoClientMediator constructor
+		            \\parameters: Username and password
+		            \\Initializes the client variable, throws an error if the user is not found.
+
+		      \item[-]addRecordToCollection
+		            \\parameters: String representation of a record in json format
+		            \\String name of the collection it should be added to.
+		            \\returns: void
+		            \\Converts the json string into a java object, then to a bson document and uses the mongoAPI to insert it into the database.
+
+		      \item[-]addRecordsToCollection
+		            \\parameters: String Array of records to be added to a collection
+		            \\String name of the collection it should be added to.
+		            \\returns: void
+		            \\for each oneof the members of the array call addRecordToCollection
+
+		      \item[-]ProcessCollection
+		            \\parameters: String, name of a collection
+		            \\returns: void
+		            \\signal the data processor to start the processing of a collection
+
+		      \item[-]getCollection
+		            \\parameters: String, name of a collection
+		            \\returns: String array containing all entries of the collection
+
+		      \item[-]getStartRecord
+		            \\parameters: String, name of a collection
+		            \\returns: the first entry of the collection as a String.
+
+		      \item[-]getEndRecord
+		            \\parameters: String, name of a collection
+		            \\returns: the last entry of the collection as a String.
+
+		      \item[-]getCollectionSize
+		            \\parameters: String, name of a collection
+		            \\returns: the number of entries in the collection as int
+
+		      \item[-]getRecordsInRange
+		            \\parameters: String, name of the collection to query
+		            \\String, key of the parameter used for filtering
+		            \\String start and end ranges for the filtering
+		            \\returns: String array containing all entries of the collection within that range
+		            \\this Method is very general to allow for flexibility.For example by letting the key be, SourceIPaddresses, or a timeStamp.
+
+		      \item[-]getRecordsInRangeSize
+		            \\parameters: String, name of the collection to query
+		            \\String, key of the parameter used for filtering
+		            \\String start and end ranges for the filtering
+		            \\returns: number of elements matching the range as int
+		      \item[-]getAvailableCollections
+		            \\parameters: -
+		            \\returns: String array with collection names
+		            \\Returns an array with the names of the collections available to the current user.
+
+
+	      \end{itemize}
+
+	\item[•]Record
+	      \\Every message that comes from kafka and needs to be added to the database has its own Record class that inherit from this one.
+	      \\Every single class that inherits needs to be able to, using reflection, convert itself into a Bson Document where every variable is a key Value pair of the name of the variable and its associated value.
+	      \\Attributes
+	      \begin{itemize}
+		      \item[-] id
+		            \\type: String
+	      \end{itemize}
+	      Methods
+	      \begin{itemize}
+		      \item[-]getAsDocument()
+		            \\parameters: none
+		            \\returns: A Document, containing every variable of any class inheriting from this one.
+		            \\This function checks for every variable, gets its name and value as a string and adds it to the document that it eventually returns.
+	      \end{itemize}
+
+	\item[•]PacketRecord
+	      \\Inheriting from Record, this class contains the variables that match the json string obtained from kafka.
+	      \\Attributes
+	      \begin{itemize}
+		      \item[-] id
+		            \\type: String
+		            \\this id is used for determining the ordering when saving to mongoDB, it's the offset of the message in the kafka messaging queue. inherited from Record
+		      \item[-] client
+		            \\type: String
+		      \item[-] L2Protocol
+		            \\type: String
+		      \item[-] SourceMACAddress
+		            \\type: String
+		      \item[-] L3Protocol
+		            \\type: String
+		      \item[-] L4Protocol
+		            \\type: String
+		      \item[-] SourceIPAddress
+		            \\type: String
+		      \item[-] PacketSummary
+		            \\type: String
+		      \item[-] DestinationIPAddress
+		            \\type: String
+		      \item[-] Timestamp
+		            \\type: String
+		      \item[-] DestinationPort
+		            \\type: String
+		      \item[-] SourcePort
+		            \\type: String
+		      \item[-] DestinationMACAddress
+		            \\type: String
+
+	      \end{itemize}
+
+	      Methods
+	      \begin{itemize}
+		      \item[-]getters / setters
+		            \\parameters: variable
+		            \\returns: variable type
+		            \\Each variable has its getters and setter methods.
+	      \end{itemize}
+
+	\item[•]AlarmRecord
+	      \\Inheriting from Record, this class contains the variables that match the json string obtained from kafka.
+	      \\Attributes
+	      \begin{itemize}
+		      \item[-] id
+		            \\type: String
+		      \item[-] AlarmID
+		            \\type: String
+		      \item[-] AlarmType
+		            \\type: String
+		      \item[-] AlarmOccurrenceTime
+		            \\type: String
+		      \item[-] AlarmCategory
+		            \\type: String
+		      \item[-] AlarmScore
+		            \\type: String
+		      \item[-] AlarmDescription
+		            \\type: String
+		      \item[-] PacketSummary
+		            \\type: String
+
+	      \end{itemize}
+	      Methods
+	      \begin{itemize}
+		      \item[-]getters / setters
+		            \\parameters: variable
+		            \\returns: variable type
+		            \\Each variable has its getters and setter methods.
+	      \end{itemize}
+
+	\item[•]MiscRecord
+	      \\Inheriting from Record, this class is used by the data processor as an 'in-between' state before saving to the database. As well as an extension point for adding more types of records into the database programatically in the future.
+	      \\Refer to the data processor class for further data on the key value pairs.
+	      \\Attributes
+	      \begin{itemize}
+		      \item[-] pairs
+		            \\ A Map of strings to Objects to store any 1 to many relationships
+	      \end{itemize}
+	      Methods
+	      \begin{itemize}
+		      \item[-]getters / setters
+		            \\parameters: none
+		            \\returns: variable type
+		            \\Each variable has its getters and setter methods.
+	      \end{itemize}
+
+	\item[•]DataProcessor
+	      \\This class is a mediator for each one of our data aggregators used for extraciton of features from the raw data stored in mongoDB.
+	      \\ We might want to hve multiple data processors for chaining different aggregators together or to split up the work into mutliple threads. This is dependant on further performance testing.
+	      \\Attributes
+	      \begin{itemize}
+		      \item[-] client
+		            \\ an instance of the associated mongoClient that requested the data aggregation
+		      \item[-] aggregators
+		            \\ A Arraylist containing all the aggregators to be applied on a collection.
+	      \end{itemize}
+	      Methods
+	      \begin{itemize}
+		      \item[-]getters / setters
+		      \item[-]processData
+		            \\parameters: variable
+		            \\returns: variable type
+	      \end{itemize}
+	\item[•] IAggregator
+	      \\This interface is the building block for every aggregator to be applied to data
+	      \\Attributes
+	      Methods
+	      \begin{itemize}
+		      \item[-]processData
+		            \\parameters: Records array of the records to be processed
+	      \end{itemize}
+
+	\item[•] FlowRatePerSecond
+	      \\Implements IAggregator. This calculates, per port, the outgoing and incoming connections.
+	      A record processed by this aggregator is stored in a collection as follows:
+	      \begin{verbatim} 
+		  Name of collection: collectionName\_FlowratePerSec
+		  structure of record as json:
+		   {
+		  "date" : \{" date" " Unix_Timestamp  } 
+		  rounded down to the second this record points to.
+		  Connections : [
+		  { Port: "portNumer", "InOut" : " In/Out ", count : "Number" }
+		  { Port: "portNumer", "InOut" : " In/Out ", count : "Number" }
+		  ...
+		  
+		  ] This array has an entry per port if the port communicated that second. 
+		  Precomputing this allows us to stream whenever the client needs the information 
+		  for a specific node.
+		}
+	      \end{verbatim}
+	      Methods
+	      \begin{itemize}
+		      \item[-]processData
+		            \\parameters: Records array of the records to be processed
+		            \\ specific imlpementation left to the classes implementing this interface
+	      \end{itemize}
+
+	\item[•] NumberOfConnectionsPerNodePerSecond
+	      \\Implements IAggregator. This calculates the outgoing and incoming connections.
+	      A record processed by this aggregator is stored in a collection as follows:
+	      \begin{verbatim} 
+		  Name of collection: collectionName\_FlowratePerSec
+		  structure of record as json:
+		   {
+		  "date" : \{" date" " Unix_Timestamp  } 
+		  rounded down to the second this record points to.
+		  Connections : [
+		  { Port: "portNumer", count : "Number" }
+		  { Port: "portNumer", count : "Number" }
+		  ...
+		  
+		  ] This array has an entry per port if the port communicated that second. 
+		  Precomputing this allows us to stream whenever the client needs the information 
+		  for a specific node.
+		}
+	      \end{verbatim}
+	      Methods
+	      \begin{itemize}
+		      \item[-]processData
+		            \\parameters: Records array of the records to be processed
+	      \end{itemize}
+
+	      \begin{figure}[h!]
+		      \includegraphics[max size={\textwidth}{\textheight}]{images/class_back-end_hub.png}
+		      \caption{The classes involved in the communication between the server and the client}
+		      \label{fig:class_back_end_hub}
+	      \end{figure}
+	      \clearpage
+	\item[•]Hub
+	      \\
+	      This class implements the network handlers for the WebSocket connection to the client. It also has wrapper methods that delegate the database commands to the appropriate IUserSession object.
+	      \\Attributes
+	      \begin{itemize}
+		      \item[-]requestHandler
+		            \\Type : ClientProtocolHandler
+		            \\The strategy object we call for the actual parsing of the client requests.
+		      \item[-]sessions
+		            \\Type : map<Session, IUserSession>
+		            \\A map that connects a client communication session to a database session.  A non-null entry represents a successfully logged in user session.
+	      \end{itemize}
+	      Methods
+	      \begin{itemize}
+		      \item[-]handleOpen
+		            \\parameters: Session session - the current session
+		            \\returns: void
+		            \\Event handler for the start of WebSocket connection.
+		      \item[-]handleClose
+		            \\parameters: Session session - the current session
+		            \\returns: void
+		            \\Event handler for closing a connection.
+
+		      \item[-]handleMessage
+		            \\parameters: String message - the message that we received from the client
+		            \\Session session - the current session
+		            \\returns: String - the response to be sent to the client
+		            \\Event handler for receiving a message. The message is passed to the ClientProtocolHandler.
+
+		      \item[-]handleError
+		            \\parameters: Session session - the current session
+		            \\Throwable t - the exception that occurred
+		            \\returns: void
+		            \\Event handler for errors/exceptions during communication.
+		      \item[-]createUserSession
+		            \\parameters: Session session - the current session
+		            \\String username - the user id to login with
+		            \\String password - the password
+		            \\returns: IUserSession
+		            \\Delegate to the IUserSession method to instantiate a new UserSession and log in into the database using the given credentials.
+
+		      \item[-]getAvailableCollections
+		            \\parameters: Session session - the current session
+		            \\returns: String array with collection names
+		            \\Returns an array with the names of the collections available to the current user.
+
+		      \item[-]getCollection
+		            \\parameters: Session session - the current session
+		            \\String - name of a collection
+		            \\returns: String array containing all entries of the collection
+
+		      \item[-]getStartRecord
+		            \\parameters: String, name of a collection
+		            \\returns: the first entry of the collection as a String.
+
+		      \item[-]getEndRecord
+		            \\parameters: String, name of a collection
+		            \\returns: the last entry of the collection as a String.
+
+		      \item[-]getCollectionSize
+		            \\parameters: Session session - the current session
+		            \\String collection - the collection to query
+		            \\returns: long - the number of records
+		            \\Returns the number of records in the specified collection.
+
+		      \item[-]getRecordsInRange
+		            \\parameters: Session session - the current session
+		            \\String - name of the collection to query
+		            \\String key - the parameter used for filtering
+		            \\String start and end - range for the filtering
+		            \\returns: String array containing all entries of the collection within the filter range
+		            \\ Returns an array containing all records of this
+		            collection for which the value of the
+		            specified key is in the range [start, end).
+		            The records will be in the same order as
+		            they are in the collection.
+
+		      \item[-]getRecordsInRangeSize
+		            \\parameters: Session session - the current session
+		            \\String - name of the collection to query
+		            \\String key - the parameter used for filtering
+		            \\String start and end - range for the filtering
+		            \\returns: number of elements matching the range as int
+		            \\Returns the number of records in the specified
+		            collection for which the value of the specified
+		            key is within the range [start, end).
+	      \end{itemize}
+
+	      \newpage
+	\item[•]IUserSession
+	      \\An IUserSession object encapsulates a data base session.
+	      On instantiation an IUserSession connects to a database using
+	      the given user id and password and uses this connection for
+	      all following data base access.
+	      \\Methods
+	      \begin{itemize}
+		      \item[-]createUserSession
+		            \\parameters: String username - the user id to login with
+		            \\String password - the password
+		            \\returns: IUserSession
+		            \\Factory method to instantiate a new UserSession and log in into the database using the given credentials.
+
+		      \item[-]getAvailableCollections
+		            \\parameters: -
+		            \\returns: String array with collection names
+		            \\Returns an array with the names of the collections available to the current user.
+
+		      \item[-]getCollection
+		            \\parameters: String - name of a collection
+		            \\returns: String array containing all entries of the collection
+
+		      \item[-]getStartRecord
+		            \\parameters: String, name of a collection
+		            \\returns: the first entry of the collection as a String.
+
+		      \item[-]getEndRecord
+		            \\parameters: String, name of a collection
+		            \\returns: the last entry of the collection as a String.
+
+		      \item[-]getCollectionSize
+		            \\parameters: String collection - the collection to query
+		            \\returns: long - the number of records
+		            \\Returns the number of records in the specified collection.
+
+		      \item[-]getRecordsInRange
+		            \\parameters: String - name of the collection to query
+		            \\String key - the parameter used for filtering
+		            \\String start and end - range for the filtering
+		            \\returns: String array containing all entries of the collection within the filter range
+		            \\ Returns an array containing all records of this
+		            collection for which the value of the
+		            specified key is in the range [start, end).
+		            The records will be in the same order as
+		            they are in the collection.
+
+		      \item[-]getRecordsInRangeSize
+		            \\parameters: String - name of the collection to query
+		            \\String key - the parameter used for filtering
+		            \\String start and end - range for the filtering
+		            \\returns: number of elements matching the range as int
+		            \\Returns the number of records in the specified
+		            collection for which the value of the specified
+		            key is within the range [start, end).
+	      \end{itemize}
+
+
+	      \newpage
+	\item[•]MongoDBUserSession
+	      \\Encapsulates a user session for a connection to a MongoDB database.
+	      \\Attributes
+	      \begin{itemize}
+		      \item[-]mongoClientMediator
+		            \\Type : mongoClientMediator
+		            \\The mediator object used to access the database
+	      \end{itemize}
+	      Methods
+	      \begin{itemize}
+		      \item[-]MongoDBUserSession constructor
+		            \\parameters: -
+		            \\Private constructor to create a new MongoDB session.
+
+		      \item[-]createUserSession
+		            \\parameters: String username - the user id to login with
+		            \\String password - the password
+		            \\returns: a new MongoDBUserSession object
+		            \\Factory method to instantiate a new MongoDBUserSession and log in into the database using the given credentials.
+
+		      \item[-]getAvailableCollections
+		            \\parameters: -
+		            \\returns: String array with collection names
+		            \\Returns an array with the names of the collections available to the current user.
+
+		      \item[-]getCollection
+		            \\parameters: String - name of a collection
+		            \\returns: String array containing all entries of the collection
+
+		      \item[-]getStartRecord
+		            \\parameters: String, name of a collection
+		            \\returns: the first entry of the collection as a String.
+
+		      \item[-]getEndRecord
+		            \\parameters: String, name of a collection
+		            \\returns: the last entry of the collection as a String.
+
+		      \item[-]getCollectionSize
+		            \\parameters: String collection - the collection to query
+		            \\returns: long - the number of records
+		            \\Returns the number of records in the specified collection.
+
+		      \item[-]getRecordsInRange
+		            \\parameters: String - name of the collection to query
+		            \\String key - the parameter used for filtering
+		            \\String start and end - range for the filtering
+		            \\returns: String array containing all entries of the collection within the filter range
+		            \\ Returns an array containing all records of this
+		            collection for which the value of the
+		            specified key is in the range [start, end).
+		            The records will be in the same order as
+		            they are in the collection.
+
+		      \item[-]getRecordsInRangeSize
+		            \\parameters: String - name of the collection to query
+		            \\String key - the parameter used for filtering
+		            \\String start and end - range for the filtering
+		            \\returns: number of elements matching the range as int
+		            \\Returns the number of records in the specified
+		            collection for which the value of the specified
+		            key is within the range [start, end).
+
+	      \end{itemize}
+
+	      \newpage
+
+	\item[•]ClientRequestHandler
+	      \\This class handles client requests by parsing them, executing
+	      the requested action and producing responses.
+	      The requested actions are typically executed by calls to the appropriate methods in the Hub object. The relation between the Hub class and this class is basically the strategy design pattern with a single strategy.
+	      \\Attributes
+	      \begin{itemize}
+		      \item[-]hub
+		            \\Type : Hub
+		            \\The Hub object to work with
+	      \end{itemize}
+	      Methods
+	      \begin{itemize}
+		      \item[-]ClientRequestHandler
+		            \\parameter: Hub hub - the Hub object to work with
+		            \\The constructor; sets the hub attribute.
+
+		      \item[-]handleRequest
+		            \\parameters: Session session - the current client session
+		            \\String message - the client request to process
+		            \\returns: String - the response to be sent to the client
+		            \\Parse the message from the client, execute the requested action, and construct the response message.
+	      \end{itemize}
+
+
+\end{itemize}
+
+\begin{figure}
+	\includegraphics[angle=90,origin=c,max size={\textwidth}{\textheight}]{images/class_back-end.png}
+	\caption{This is the class diagram for the whole back-end system}
+	\label{fig:class_back_end}
+\end{figure}
+\newpage
+
+\subsubsection{Sequence Diagrams}
+\autoref{fig:seq_server_init}  shows the initalization sequence order, the correspoding class diagram is \autoref{fig:class_back_end_init}, the program dependes on a couple of services namely (in order), the zookeeper serivce, the kafka server service and the mongoDB service. Once all services are up and running the MongoConsumer is created and can start consuming messages and the Hub can start listening to client logins, requests, etc.
+\begin{figure}[h!]
+	\includegraphics[max size={\textwidth}{\textheight}]{images/sequence_server_init.png}
+	\caption{Initialization sequence and message consumption}
+	\label{fig:seq_server_init}
+\end{figure}
+
+
+\subsubsection{Activity Diagram}
+
+As previously mentioned for UAC the built-in UAC in MongoDB is used. \\
+\autoref{fig:act_UAC} shows the workflow on adding new roles and new user, who upon creation have a role assigned to them, to MongoDB.
+\\
+A Role determines what can be done and seen within a database. For the purposes of the ADIN INSPECTOR there are three basic roles,
+Admin, Operator and Analyst.
+The admin role , created by default, can create and destroy users as well as assign specific roles to them. An analyst can see all collections on the database and an Operator can only see part of them.
+
+\begin{figure}[h!]
+	\includegraphics[max size={\textwidth}{\textheight}]{images/activity_MongoConsumer.png}
+	\caption{Initialization and message consumption workflow.}
+	\label{fig:act_consume}
+\end{figure}
+\clearpage
+
+\begin{figure}[h!]
+	\includegraphics[angle=90,origin=c,max size={\textheight}{\textwidth}]{images/activity_ProcessData.png}
+	\caption{This diagram shows the processing of Collections and records as well as the addition of extracted data back into the database.}
+	\label{fig:act_proc_data}
+\end{figure}
+\clearpage
+
+
+\begin{figure}[h!]
+	\includegraphics[max size={\textwidth}{\textheight}]{images/activity_User-Management.png}
+	\caption{User Management workflow}
+	\label{fig:act_UAC}
+\end{figure}
+
+\clearpage
+\subsection{Changes}
+Changes made between version 1.1.0 and version 2.0.0 of this document.
+
+\subsubsection{Changes to the client-server protocol}
+The protocol responses have been made more expressive in general.
+\begin{itemize}
+	\item{Rename "LOGIN\_TOKEN" request to "AUTH".}
+	\item{Rename "LIST\_COL" response to "LIST\_COLL".}
+	\item{Expand "session" response with the specifier key "par"}
+	\item{Expand "data set" and "collection size" responses with the key "key"}
+	\item{Expand "data set" and "collection size" responses with the keys "start" and "end", if they were in the request}
+	\item{"data set" and "collection size" responses will now echo back any key-value pairs not specified in the protocol}
+	\item{getStartRecord, getEndRecord, and the "single data point" response were added.}
+	      item{getEndpoints and the "data endpoints" response were added.}
+	      end XXX
+\end{itemize}
+
+
+\end{document}
