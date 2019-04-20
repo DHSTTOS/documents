@@ -1,6 +1,22 @@
-# Deployment/Installation Manual for the ADIN Inspector System
+  <a href="https://adin-frontend.netlify.com">
+    <img alt="Logo" src="https://adin-frontend.netlify.com/logo.svg" width="80"
+ />
+  </a>
+</p>
 
-## Tested software environment
+<h1 align="center">
+  Drawing How Stuff Talk To Other Stuff
+</h1>
+
+DHSTTOS (Drawing How Stuff Talks To Other Stuff) project is part of the ADIN (Anomaly Detection in Industrial Networks) suite.
+
+DHSTTOS mainly consists of 2 sub-projects: the [frontend](frontend) and [backend](Back-end). Please refer to their `LICENSE` files for information on their respective licenses.
+
+A walkthrough screencast of the frontend can be found [here](https://youtu.be/Vt3kImBWPbI).
+
+## Deployment/Installation 
+
+### Tested software environment
 (With front-end and back-end on the same server)
 Ubuntu 18.04.1 LTS
 
@@ -40,39 +56,35 @@ nodejs 10.15.0
 You will also need [node.js 10+ (with npm 6+)](https://nodejs.org/en/) to build the frontend modules. Consider using [nvm](https://github.com/creationix/nvm) to manage multiple node installations on your system.
 
 
-## Configuration of the webserver
+### Configuration of the webserver
 The following setup uses one webserver for both the frontend (the website that the user accesses) and the back-end (the database accessed from the frontend javascript program).
 
+#### Backend dependencies
+1. `MongoDB  <= 4.0.6`
 
-### The repository address
+The Mongo service needs to be running and a user account with read/write for all collections and databases as well as a AdinInspector Database and an authentication database under an 'admin' database.
 
-The following repository 
-https://github.com/DHSTTOS/implementation
-contains all source and configuration files for both back-end and front-end.
+A [dump](https://docs.mongodb.com/manual/reference/program/mongodump/) containing all relevant databases and the provided test datasets can be found on this directory under dump/.
 
+To export it you can use the [mongorestore](https://docs.mongodb.com/manual/reference/program/mongorestore/#bin.mongorestore) utility.
+i.e. `run mongorestore -u "ADMINUSER" -p "PASS"` on the same directory as the dump/ directory.
 
-### Kafka and MongoDB
-Please refer to the README.md for the [Back-end](https://github.com/DHSTTOS/implementation/tree/master/Back-end)
+2. Kafka 2.1.0
 
+Installation instructions for Kafka can be found [here](https://kafka.apache.org/quickstart)
 
-### Building the .jar file (the servlet) from the java source
-
-Fetch the repository, then run the following commands:
-
-```bash
-cd implementation/Back-end
-mvn clean compile assembly:single
-```
-
-This will produce the file `target/adininspector-backend-0.0.1-SNAPSHOT-jar-with-dependencies.jar` and bundle all necessary dependencies with it.
+The programm needs the Kafka server to be up and the Kafka server needs Zookeper to be started.
 
 
-### Apache Tomcat server
-#### Installing Tomcat
+3. Apache Tomcat server
+
+  Installing Tomcat:
+  
 see e.g.
  https://www.digitalocean.com/community/tutorials/install-tomcat-9-ubuntu-1804
 
-#### Configuring Tomcat
+  Configuring Tomcat:
+  
 This may vary depending on the specific underlying OS.
 On digital ocean's droplet hooking tomcat up to the systemd demon resulted in the server aborting and restarting in a loop.
 Starting tomcat manually instead works.
@@ -93,6 +105,33 @@ This file is set up to make use of a certificate in `/etc/letsencrypt/` to enabl
 Tomcat will still run without such a certificate, but only `http://` connections will be available.
 
 You can get a certificate from e.g. [Let's Encrypt](https://letsencrypt.org/getting-started/).
+
+#### Frontend dependencies
+
+0. `cd` into frontend sub directory
+1. Install dependencies with `npm i` (please don't use `yarn`)
+1. Run `npm run build` to create an optimized production build
+
+Because we allow the user to enter their own WebSocket endpoint of DHSTTOS back
+end, this web application can be hosted anywhere. One thing to notice is that f
+or most browsers, if the user loads this app from a server which enforces HTTPS
+ (eg. vanilla Netlify), they won't be able to connect to an unencrypted WebSock
+et endpoint via `ws://` protocol, so `wss://` is required.
+
+
+
+#### Building the .jar file (the servlet) from the java source
+
+Fetch the repository, then run the following commands:
+
+```bash
+cd implementation/Back-end
+mvn clean compile assembly:single
+```
+
+This will produce the file `target/adininspector-backend-0.0.1-SNAPSHOT-jar-with-dependencies.jar` and bundle all necessary dependencies with it.
+
+
 
 #### Installing the webapps/adininspector content
 
