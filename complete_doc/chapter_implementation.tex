@@ -1,16 +1,15 @@
 \chapter{Implementation}\label{sec:implementation}
-\section{Design}\label{sec:intro}
-\subsection{Introduction}
+\section{Introduction}
 
 This implementation report covers changes in the design from the one decribed in the original design phase
 and decribes the current state of the implementation by lists of completed and not completed requirements.
 
 
-\subsection{Changes in the Design}
+\section{Changes in the Design}
 
 Changes are grouped together according to the reason for the change.
 
-\subsubsection{User Interface changes for better aesthetics and convenience}
+\subsection{User Interface changes for better aesthetics and convenience}
 \begin{itemize}
   \item{New Login Page
   \\
@@ -21,7 +20,7 @@ Changes are grouped together according to the reason for the change.
   The filters now can be easily accessible inside the config modal of the diagram.}
 \end{itemize}
 
-\subsubsection{User Interface changes for usability improvements}
+\subsection{User Interface changes for usability improvements}
 \begin{itemize}
   \item{New text input box for WebSocket endpoint
   \\
@@ -29,7 +28,7 @@ Changes are grouped together according to the reason for the change.
   
 \end{itemize}
 
-\subsubsection{Refactoring for cleaner code and changes for convenience reasons}
+\subsection{Refactoring for cleaner code and changes for convenience reasons}
 \begin{itemize}
 \item{Data formatting helper function on the frontend
   \\
@@ -87,7 +86,7 @@ Changes are grouped together according to the reason for the change.
 
 \end{itemize}
 
-\subsubsection{Changes due to clarified requirements}
+\subsection{Changes due to clarified requirements}
 \begin{itemize}
 \item{Differing input formats for Date/Timestamp}
   \\
@@ -96,7 +95,7 @@ Changes are grouped together according to the reason for the change.
 \end{itemize}
 
 
-\subsubsection{Changes due to oversights}
+\subsection{Changes due to oversights}
 
 These are changes and additions due to oversights and mistakes in the original design.
 
@@ -117,7 +116,7 @@ was unspecified in the Design document.
 \end{itemize}
 
 
-\subsubsection{Changes due to unexpected complexity}
+\subsection{Changes due to unexpected complexity}
 These changes can be attributed to lack of familiarity with the used components and libraries.
 \begin{itemize}
   \item{Workaround for Kafka's API}
@@ -162,13 +161,13 @@ These changes can be attributed to lack of familiarity with the used components 
 
 \newpage
 
-\subsection{List of implemented must- and should-requirements}
-\subsubsection{List of implemented must-requirements}
+\section{List of implemented must- and should-requirements}
+\subsection{List of implemented must-requirements}
 FR100, FR110, FR200, FR300, FR400, FR500, FR700, FR710, FR720, FR1110, FR1300, FR1310
 \\
 cancelled after Mike left: FR800
 
-\subsubsection{List of implemented should-requirements}
+\subsection{List of implemented should-requirements}
 \begin{itemize}
   \item{FR1332 filter to compute flow rate}
   \begin{itemize}
@@ -177,7 +176,7 @@ cancelled after Mike left: FR800
   \item{FR1400}
 \end{itemize}
 
-\subsubsection{List of not implemented must-requirements}
+\subsection{List of not implemented must-requirements}
 \begin{itemize}
   \item{FR600 dynamically change the selected/displayed components}
   \item{FR900 The amount of data can be limited via a slider [...]}
@@ -191,13 +190,13 @@ to which all diagrams must update to.
 \end{itemize}
 
 
-\subsubsection{List of not implemented should-requirements}
+\subsection{List of not implemented should-requirements}
 \begin{itemize}
 \item{FR1320 per-diagram filters}
 \end{itemize}
 
 
-\subsection{Timeline and Delays}
+\section{Timeline and Delays}
 There were delays in the implementation phase caused by
 \begin{itemize}
 \item{clarification of requirements}
@@ -212,7 +211,7 @@ There were delays in the implementation phase caused by
 \end{figure}
 
 
-\subsection{Overview of unit tests}
+\section{Overview of unit tests}
 Number of unit tests:\\
 \hfill
 \\
