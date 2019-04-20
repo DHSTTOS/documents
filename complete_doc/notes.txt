@@ -1,0 +1,8 @@
+=== Notes from Ankush ===
+1. Have different diagrams feed from different sources
+2. No multiple browser tabs... :'(
+3. *brushing* for timeline visualization
+4. Playback speed automatically adjusted
+5. Integrate "online mode" with brush end
+6. Each packet, single JSON object
+7. Login system, with different roles

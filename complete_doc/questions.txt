@@ -1,0 +1,120 @@
+2018-11-13
+
+classification of requirements according to the MoSCoW schema:  must/should/could(= nice to have)/wont(=no)
+
+1) Format of input data from the data base, i.e. dissected data:
+
+Do all data streams that we will have to display consist of JSON objects?
+-> unclear, probably no. open question: what data format does the data in kafka have?
+
+Does each object have a time stamp?
+-> timestamp is only added when writing data into MongoDB after dissecting
+
+Or will there be data streams with a constant sampling rate? If so, how and where is the start time and sampling rate of such a stream specified?
+-> unanswered, but data streams in kafka probably haven't had a time added (they might have a PNIO timestamp, though)
+
+Do the dissectors all produce data with the same format or different formats?
+If it's different formats: do they contain an id field?
+e.g. :{"id": "dissector_format_one", "sender": "127.0.0.1" }, {"id": "dissector_format_two", "time": "07:00:00.01"}
+-> different formats and no id field
+
+Do the dissector formats contain fields with named values, e.g. a field "alarm level" with the possible values "high", "medium", "low"?
+-> unclear
+If so, is this specified somewhere, e.g. in a JSON Schema?
+-> "might come in the future"
+Or should our program go through the whole data stream to collect all possible values?
+-> deal with data as it comes, i.e. dynamically adjust the scaling of the axes
+
+Do the dissector formats contain fields with numerical values that are limited to a certain range?
+(e.g. a "alarm priority" with a range of 1-100)
+-> unclear
+If so, is the range specified somewhere, e.g. in a JSON Schema?
+-> "might come in the future"
+Or should our program go through the whole data stream to determine the maximum and minimum values and scale the diagram axes accordingly?
+-> deal with data as it comes, i.e. dynamically adjust the scaling of the axes
+
+Is each JSON object saved in the MongoDB as a single document? Or are multiple objects grouped together? Or some other format?
+-> single document
+
+
+
+
+2) Data processing:
+Must/should/could the visualization program perform aggregation operations, e.g. compute a moving average?
+from 1st email: "Flow rate between network nodes" - does one of the dissectors produce this or do we have to compute it?
+-> must have. types needed:
+  - moving average
+  - average flow rate
+
+
+3) Display:
+Is it required that data from more than one dissector can be displayed in one diagram at the same time? (e.g. a line diagram with data from dissector_one in red and data from dissector_two in blue)
+-> must
+
+Is it required that data from different time ranges of one data stream can be displayed together in one diagram? (e.g. a diagram with time from 00:00 to 23:59 on the x-axis, with monday's data in blue and tuesday's data in red)
+-> unclear; should?
+
+Being able to have two or more diagrams on the screen at the same time - must/should/could criterium?
+-> must
+
+If there are two (or more) diagrams on the screen displaying the same data set/data stream, must/should/could scrolling or zooming in one of them also change which  data range is diplayed in the other diagrams? Or should these diagrams be independent of each other? Or must/should/could both "coupled" and "independent" behavior be possible and the user be able to configure this interactively?
+-> coupled mode is a must; uncoupled mode unclear
+
+When selecting a data point with several atributes (in the form of name+value pairs), must/should/could it be possible for the user to select one of those atributes and the program would highlight all other data points with that attribute value?
+-> could (he seemed to think this was covered already by the filters)
+
+Must/should/could it be possible to have several different selections active at the same time? (e.g. first all data points representing packets with a certain sender-ip are selected and highlighted in red, then all data points representing packets with a certain size are selected and highlighted in orange)
+-> could
+
+Must/should/could it be possible to extend selections ? (e.g. first all data points representing packets with a certain sender-ip are selected, then all data points representing packets with a certain size are selected, too)
+-> could
+
+Must/should/could it be possible to invert a selection?
+-> could
+
+Must/should/could it be possible to filter out (i.e. not display) selected data points?
+-> must, including ability to chain or combine filters (e.g.: "discard all data points with x < 100" together with "discard all data points with x > 200")
+
+
+
+4)
+Macros?
+-> wont (could)
+Session logging + replay?
+-> wont (could)
+
+5)
+security: login + password (+ account management) needed?
+-> must; users are assigned roles where each role has:
+   - a list of data streams it can access
+   - a list of diagram types it can use/access
+
+
+6)
+Is
+- reading data from Kafka a must criterium or
+- would it be acceptable to have a setup where a "1:1"-dissector feeds data from Kafka to MongoDB unchanged and our GUI reads only ever from the database or
+- would it be acceptable to have some proxy on the server that can read from both Kafka and MongoDB and our GUI connects only to this proxy?
+
+-> unclear, it's our decision
+
+
+
+
+
+
+
+
+================================================================================
+NEW QUESTIONS FOR 20.11.2018
+================================================================================
+
+About the sample data:
+	Formatting?
+	Wich protocols should we analyze/care about
+The GUI should be able to support an undeterminate number of diagrams and scrollbar?
+NF500 Functional or Non-functional?
+How many nodes need to be handled?
+Filters
+How many diagrams
+What user roles can and cannot do what.

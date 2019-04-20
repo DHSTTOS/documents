@@ -1,0 +1,52 @@
+Needs requirements, Front-end
+X:REMOVED
+M:MUST
+AA:ASK ANKUSH
+S:Should
+NTH: #Nice to have
+
+0.X OTT 
+There has to be an account managing system in place.
+1./M
+When opening the Web view the user has to be greeted by a login screen
+2./M
+There needs to be at least two levels of access for different account types.
+Level of access is defined as: the specific set of data streams the user is able to view and select to be analyzed.
+3.X OTT
+One or more of these accounts has to have the ability to manage this accounts. i.e. create/delete and change access levels
+4.X 
+There needs to be a GUI element for managing all of the above described behaviour.
+5./M
+Once logged in an user has to be able to select a data stream to be visualized.
+6./M
+The user has to have the ability to select multiple diagrams to visualize the selected data stream.
+7./M /AA
+The user can use at least this diagram types: 
+	A timeline Plot
+	A scatter plot
+	A Network diagram
+8./M
+The user is able to dynamically change which component of the data is used in both the X and Y axis of the diagrams
+9./M
+The user should be able to add new diagrams to the GUI and configure them ( i.e. setting diagram type and axis) both at creation and at a later time.
+9./M
+The GUI has to support a minimum of 4 different diagrams at once.
+9.5/S /AA
+The GUI should be able to support an undeterminate number of diagrams and scrollbar.
+10./M
+Each diagram should be able to be maximised to take on the full size of the diagrams container.
+11./M
+Each drawn diagram can be connected to a different data stream.
+12./M
+The amount of data can be limited via a slider, effectively setting a limited time window, to which all diagram must update to.
+13./NTH
+Within the slider the user is able to scroll through the timeline and the diagrams need to react in real-time.
+14./M
+There needs to be an auto scroll function (play button) which automatically scrolls through the selected time window and whose speed is adjustable
+15./M
+The user has to be able to log out of the system.
+
+16./AA /NOPE
+One of the user types has to be able to add new streams, right?
+17./AA /NOPE
+how do you add new users?
